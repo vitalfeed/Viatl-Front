@@ -1,0 +1,103 @@
+<!-- Section Hero -->
+<section class="bg-gradient-to-b from-white to-vet-beige py-20">
+  <div class="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col md:flex-row items-center">
+      <div class="md:w-1/2 fade-in">
+        <h1 class="text-4xl md:text-5xl font-bold mb-6 text-vet-blue">
+          Simplifiez la gestion de votre cabinet vétérinaire
+        </h1>
+        <p class="text-xl mb-8 text-gray-600">
+          Une application conçue spécifiquement pour les vétérinaires spécialisés dans les soins pour chiens et chats.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a routerLink="/formulaire" class="bg-vet-blue hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 text-center">
+            Demander un accès
+          </a>
+          <a href="#fonctionnalites" class="bg-white hover:bg-gray-100 text-vet-blue font-semibold py-3 px-6 rounded-lg border border-vet-blue transition-all duration-300 text-center">
+            Découvrir les fonctionnalités
+          </a>
+        </div>
+      </div>
+      <div class="md:w-1/2 mt-10 md:mt-0 fade-in">
+        <div class="relative">
+          <div class="absolute inset-0 bg-vet-green/10 rounded-full transform -translate-x-4 translate-y-4"></div>
+          <svg class="w-full h-auto relative z-10" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+            <path d="M190 20C80 20 0 100 0 200C0 290 70 300 190 300C310 300 400 290 400 200C400 100 300 20 190 20Z" fill="#3b82f6" opacity="0.1"/>
+            <path d="M200 25C100 25 30 95 30 185C30 265 90 275 200 275C310 275 370 265 370 185C370 95 300 25 200 25Z" fill="#10b981" opacity="0.1"/>
+            <path d="M200 140C180 100 120 80 80 120C40 160 40 220 80 260C120 300 180 300 200 260" fill="none" stroke="#3b82f6" stroke-width="4"/>
+            <path d="M200 140C220 100 280 80 320 120C360 160 360 220 320 260C280 300 220 300 200 260" fill="none" stroke="#10b981" stroke-width="4"/>
+            <circle cx="200" cy="140" r="20" fill="#3b82f6"/>
+            <circle cx="200" cy="260" r="20" fill="#10b981"/>
+            <path d="M190 200H210M200 190V210" stroke="black" stroke-width="4"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section Fonctionnalités -->
+<section id="fonctionnalites" class="py-20 bg-white">
+  <div class="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold mb-4">Fonctionnalités principales</h2>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        Découvrez comment notre application peut simplifier votre quotidien et améliorer la qualité des soins.
+      </p>
+    </div>
+    
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div *ngFor="let feature of features" class="bg-gray-50 p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 slide-in">
+        <div class="w-12 h-12 bg-vet-blue/10 rounded-full flex items-center justify-center mb-4">
+          <svg class="w-6 h-6 text-vet-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="feature.icon"></path>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold mb-2">{{ feature.title }}</h3>
+        <p class="text-gray-600">{{ feature.description }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section Témoignages -->
+<section class="py-20 bg-vet-beige">
+  <div class="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold mb-4">Ce qu'en disent nos utilisateurs</h2>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        Des vétérinaires comme vous qui ont transformé leur pratique grâce à notre application.
+      </p>
+    </div>
+    
+    <div class="grid md:grid-cols-2 gap-8">
+      <div *ngFor="let testimonial of testimonials" class="bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 fade-in">
+        <div class="flex items-center mb-6">
+          <div class="w-12 h-12 bg-vet-green/20 rounded-full flex items-center justify-center mr-4">
+            <svg class="w-6 h-6 text-vet-green" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+            </svg>
+          </div>
+          <div>
+            <h4 class="font-semibold text-lg">{{ testimonial.name }}</h4>
+            <p class="text-gray-600">{{ testimonial.role }}</p>
+          </div>
+        </div>
+        <blockquote class="text-gray-700 italic">"{{ testimonial.content }}"</blockquote>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section CTA -->
+<section class="py-20 bg-gradient-to-r from-vet-blue to-vet-green text-white">
+  <div class="container max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <h2 class="text-3xl md:text-4xl font-bold mb-6 text-white">Prêt à transformer votre cabinet vétérinaire ?</h2>
+    <p class="text-xl mb-10 text-white/90 max-w-3xl mx-auto">
+      Rejoignez les centaines de vétérinaires qui font confiance à notre solution pour simplifier leur quotidien.
+    </p>
+    <a routerLink="/formulaire" class="inline-block bg-white text-vet-blue font-semibold py-3 px-8 rounded-lg hover:bg-gray-100 transition-all duration-300">
+      Demander un accès maintenant
+    </a>
+  </div>
+</section>

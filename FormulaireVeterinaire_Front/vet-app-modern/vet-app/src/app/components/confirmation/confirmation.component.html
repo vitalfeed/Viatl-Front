@@ -1,0 +1,66 @@
+<section class="py-16 bg-gradient-to-b from-white to-vet-beige min-h-screen">
+  <div class="container max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12 fade-in">
+      <div class="w-20 h-20 bg-vet-green/20 rounded-full flex items-center justify-center mx-auto mb-6">
+        <svg class="w-10 h-10 text-vet-green" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+      </div>
+      <h1 class="text-3xl md:text-4xl font-bold mb-4 text-vet-green">Demande envoyée avec succès !</h1>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        Merci pour votre intérêt envers VitalNutri. Notre équipe examinera votre demande et vous contactera dans les plus brefs délais.
+      </p>
+    </div>
+
+    <div *ngIf="demande" class="bg-white rounded-xl shadow-md p-8 mb-8 slide-in">
+      <h2 class="text-2xl font-semibold mb-6 text-vet-blue">Récapitulatif de votre demande</h2>
+      
+      <div class="space-y-6">
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <h3 class="text-sm font-medium text-gray-500 mb-1">Nom</h3>
+            <p class="text-lg">{{ demande.nom }}</p>
+          </div>
+          <div>
+            <h3 class="text-sm font-medium text-gray-500 mb-1">Prénom</h3>
+            <p class="text-lg">{{ demande.prenom }}</p>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <h3 class="text-sm font-medium text-gray-500 mb-1">Email</h3>
+            <p class="text-lg">{{ demande.email }}</p>
+          </div>
+          <div>
+            <h3 class="text-sm font-medium text-gray-500 mb-1">Téléphone</h3>
+            <p class="text-lg">+{{ demande.telephone }}</p>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-medium text-gray-500 mb-1">Adresse du cabinet</h3>
+          <p class="text-lg">{{ demande.adresseCabinet }}</p>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-medium text-gray-500 mb-1">Numéro de vétérinaire</h3>
+          <p class="text-lg">{{ demande.numVeterinaire }}</p>
+        </div>
+        
+      </div>
+    </div>
+
+    <div class="text-center fade-in">
+      <p class="text-gray-600 mb-6">
+        Vous recevrez un email de confirmation à l'adresse <span class="font-medium">{{ demande?.email }}</span>
+      </p>
+      <a 
+        routerLink="/" 
+        class="inline-block bg-vet-blue hover:bg-blue-600 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-300"
+      >
+        Retour à l'accueil
+      </a>
+    </div>
+  </div>
+</section> 

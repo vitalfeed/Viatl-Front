@@ -1,0 +1,120 @@
+<section class="py-16 bg-gradient-to-b from-white to-vet-beige min-h-screen">
+  <div class="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-center items-center mb-8">
+      <h1 class="text-3xl md:text-4xl font-bold text-vet-blue text-center">Liste des Demandes</h1>
+    </div>
+    
+    <div *ngIf="loading" class="text-center py-10">
+      <svg class="animate-spin mx-auto h-10 w-10 text-vet-blue" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      <p class="mt-4 text-vet-blue">Chargement des demandes...</p>
+    </div>
+    <div *ngIf="error" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 text-center">
+      {{ error }}
+    </div>
+    <div *ngIf="!loading && demandes.length > 0">
+      <div class="overflow-x-auto rounded-lg shadow">
+        <table class="min-w-full bg-white rounded-lg">
+          <thead class="bg-vet-blue text-white">
+            <tr>
+              <th class="py-3 px-4 text-center">Nom</th>
+              <th class="py-3 px-4 text-center">Prénom</th>
+              <th class="py-3 px-4 text-center">Email</th>
+              <th class="py-3 px-4 text-center">Téléphone</th>
+              <th class="py-3 px-4 text-center">Adresse du cabinet</th>
+              <th class="py-3 px-4 text-center">Numéro vétérinaire</th>
+              <th class="py-3 px-4 text-center">Actions</th>
+            </tr>
+          </thead>
+          
+          <tbody>
+            <tr *ngFor="let demande of paginatedDemandes" class="border-b hover:bg-gray-50">
+              <td class="py-3 px-4 text-center">{{ demande.nom }}</td>
+              <td class="py-3 px-4 text-center">{{ demande.prenom }}</td>
+              <td class="py-3 px-4 text-center">{{ demande.email }}</td>
+              <td class="py-3 px-4 text-center">{{ demande.telephone }}</td>
+              <td class="py-3 px-4 text-center">{{ demande.adresseCabinet }}</td>
+              <td class="py-3 px-4 text-center">{{ demande.numVeterinaire }}</td>
+              <td class="py-3 px-4 text-center">
+                <button *ngIf="!hasUserForDemande(demande.id)" (click)="openCreateModal(demande)" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-1 px-3 rounded transition-all duration-300 text-sm ml-2">Créer compte</button>
+                <button *ngIf="hasUserForDemande(demande.id)" (click)="openSubscriptionModal(demande)" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-1 px-3 rounded transition-all duration-300 text-sm ml-2">Voir Abonnement</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="flex justify-center items-center mt-6 space-x-2">
+        <button (click)="setPage(page-1)" [disabled]="page === 1" class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 text-gray-700">&lt;</button>
+        <ng-container *ngFor="let p of [].constructor(totalPages); let i = index">
+          <button (click)="setPage(i+1)" [class.bg-vet-blue]="page === (i+1)" [class.text-white]="page === (i+1)" class="px-3 py-1 rounded hover:bg-vet-blue hover:text-white" [disabled]="page === (i+1)">{{ i+1 }}</button>
+        </ng-container>
+        <button (click)="setPage(page+1)" [disabled]="page === totalPages" class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 text-gray-700">&gt;</button>
+      </div>
+    </div>
+    <div *ngIf="!loading && demandes.length === 0 && !error" class="text-center text-gray-500 py-10">
+      Aucune demande trouvée.
+    </div>
+  </div>
+</section> 
+
+<!-- Modal création compte -->
+<div *ngIf="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+  <div class="bg-white rounded-xl shadow-lg p-8 w-full max-w-md relative animate-fade-in">
+    <button (click)="closeModal()" class="absolute top-3 right-3 text-gray-400 hover:text-gray-700 text-2xl">&times;</button>
+    <h2 class="text-2xl font-bold text-vet-blue mb-6 text-center">Créer un compte utilisateur</h2>
+    <div class="mb-4">
+      <label class="block text-gray-700 font-medium mb-2">Durée d'abonnement</label>
+      <select [(ngModel)]="selectedSubscription" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-vet-blue focus:border-transparent">
+        <option value="" disabled selected>Choisir la durée</option>
+        <option value="SIX_MONTHS">6 mois</option>
+        <option value="ONE_YEAR">1 an</option>
+      </select>
+    </div>
+    <div class="mb-4">
+      <label class="block text-gray-700 font-medium mb-2">Valider La Création De Ce Compte</label>
+      <input type="text" [(ngModel)]="validationText" placeholder="Tapez : valider le compte" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-vet-blue focus:border-transparent" />
+      <small class="text-gray-400">Pour confirmer, saisissez exactement : <b>valider le compte</b></small>
+    </div>
+    <button (click)="createUserFromDemande()" [disabled]="!canCreate() || creating" class="w-full bg-vet-blue hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 flex items-center justify-center mb-2">
+      <svg *ngIf="creating" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      {{ creating ? 'Création...' : 'Créer' }}
+    </button>
+    <div *ngIf="notification" class="mt-4 flex flex-col items-center justify-center">
+      <div [ngClass]="notification.includes('succès') ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'" class="rounded-lg px-4 py-3 flex items-center gap-2 text-center">
+        <svg *ngIf="notification.includes('succès')" class="w-6 h-6 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+        <span>{{ notification }}</span>
+      </div>
+    </div>
+  </div>
+</div> 
+
+<!-- Modal abonnement -->
+<div *ngIf="showSubscriptionModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+  <div class="bg-white rounded-xl shadow-lg p-8 w-full max-w-md relative animate-fade-in">
+    <button (click)="closeSubscriptionModal()" class="absolute top-3 right-3 text-gray-400 hover:text-gray-700 text-2xl">&times;</button>
+    <h2 class="text-2xl font-bold text-green-500 mb-6 text-center">Informations Sur L'abonnement</h2>
+    <div class="space-y-4">
+      <div class="flex flex-col">
+        <span class="text-gray-500 text-xs font-medium mb-1">Type d'abonnement</span>
+        <div class="px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 text-gray-700 font-semibold">{{ subscriptionInfo?.type || '-' }}</div>
+      </div>
+      <div class="flex flex-col">
+        <span class="text-gray-500 text-xs font-medium mb-1">Statut d'abonnement</span>
+        <div class="px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 text-gray-700 font-semibold">{{ subscriptionInfo?.status || '-' }}</div>
+      </div>
+      <div class="flex flex-col">
+        <span class="text-gray-500 text-xs font-medium mb-1">Date d'abonnement</span>
+        <div class="px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 text-gray-700 font-semibold">{{ subscriptionInfo?.startDate || '-' }}</div>
+      </div>
+      <div class="flex flex-col">
+        <span class="text-gray-500 text-xs font-medium mb-1">Date d'expiration</span>
+        <div class="px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 text-gray-700 font-semibold">{{ subscriptionInfo?.endDate || '-' }}</div>
+      </div>
+    </div>
+  </div>
+</div> 
