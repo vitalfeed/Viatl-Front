@@ -1,0 +1,210 @@
+<section class="ou-trouver-section">
+  <div class="container">
+    <!-- Back Button -->
+    <div class="mb-6">
+      <button (click)="navigateBack()"
+        class="flex items-center text-vet-blue hover:text-blue-700 font-semibold transition-colors duration-200 text-lg">
+        <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        Retour à l'Espace Propriétaire
+      </button>
+    </div>
+    
+    <!-- Hero Section -->
+    <div class="hero-section">
+      <h1 class="page-title">Nos Cabinets VITALFEED</h1>
+      <p class="page-description">
+        Découvrez nos cabinets vétérinaires spécialisés où vous pouvez trouver 
+        toute la gamme VITALFEED pour vos compagnons à quatre pattes
+      </p>
+    </div>
+    
+    <!-- Boutique Presentation -->
+    <div class="boutique-presentation">
+      <div class="presentation-grid">
+        <div class="presentation-content">
+          <div class="icon-wrapper">
+            <div class="store-icon">🏪</div>
+          </div>
+          <h2 class="presentation-title">Nos Cabinets Vétérinaires</h2>
+          <p class="presentation-text">
+            Nos cabinets vétérinaires VITALFEED offrent des soins de qualité avec des vétérinaires experts 
+            pour vous aider à choisir les meilleurs produits pour vos animaux de compagnie.
+          </p>
+          
+          <div class="features-list">
+            <div class="feature-item">
+              <span class="feature-icon">🎯</span>
+              <span class="feature-text">Conseils personnalisés par des experts</span>
+            </div>
+            <div class="feature-item">
+              <span class="feature-icon">📦</span>
+              <span class="feature-text">Large gamme de produits en stock</span>
+            </div>
+            <div class="feature-item">
+              <span class="feature-icon">🚚</span>
+              <span class="feature-text">Service de livraison disponible</span>
+            </div>
+            <div class="feature-item">
+              <span class="feature-icon">💳</span>
+              <span class="feature-text">Paiement sécurisé et facile</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="presentation-visual">
+          <div class="visual-card">
+            <div class="visual-header">
+              <h3>🌟 Expérience Boutique</h3>
+            </div>
+            <div class="visual-content">
+              <div class="stat-item">
+                <div class="stat-number">15+</div>
+                <div class="stat-label">Cabinets</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Satisfaction</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Map and Locations Section -->
+    <div class="map-locations-section">
+      <h2 class="section-title">🗺️ Trouvez le cabinet le plus proche</h2>
+      
+      <div class="map-content-grid">
+        <!-- Interactive Map -->
+        <div class="map-container">
+          <div class="map-card">
+            <div class="map-header">
+              <div class="map-header-content">
+                <h3 class="map-title">Carte Interactive</h3>
+                <p class="map-subtitle">Cliquez sur les marqueurs pour voir les détails</p>
+              </div>
+              <button class="maximize-btn" (click)="maximizeMap()" title="Agrandir la carte">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>
+                </svg>
+              </button>
+            </div>
+            <div class="map-embed">
+              <iframe
+                src="https://www.openstreetmap.org/export/embed.html?bbox=2.224,48.815,2.469,48.902&layer=mapnik&marker=48.8566,2.3522"
+                style="width:100%; height:400px; border-radius:12px; border:none;"
+                allowfullscreen
+                loading="lazy">
+              </iframe>
+            </div>
+            
+          </div>
+        </div>
+        
+        <!-- Locations List -->
+        <div class="locations-container">
+          <div class="locations-header">
+            <h3 class="locations-title">Nos Cabinets</h3>
+            <div class="filter-buttons">
+              <button class="filter-btn active">Tous</button>
+              <button class="filter-btn">Cabinets</button>
+            </div>
+          </div>
+          
+          <div class="locations-list">
+            <!-- Cabinet principal -->
+            <div class="location-card featured">
+              <div class="location-badge">⭐ Cabinet Principal</div>
+              <h4 class="location-name">Cabinet Vétérinaire VITALFEED Paris Centre</h4>
+              <div class="location-details">
+                <div class="location-info">
+                  <span class="info-icon">📍</span>
+                  <span class="info-text">123 Avenue des Champs-Élysées, 75008 Paris</span>
+                </div>
+                <div class="location-info">
+                  <span class="info-icon">📞</span>
+                  <span class="info-text">01 42 56 78 90</span>
+                </div>
+                <div class="location-info">
+                  <span class="info-icon">🕒</span>
+                  <span class="info-text">Lun-Sam: 9h-19h, Dim: 10h-18h</span>
+                </div>
+              </div>
+              <div class="location-actions">
+                <button class="btn-location primary">🧭 Itinéraire</button>
+                <button class="btn-location secondary">📞 Appeler</button>
+              </div>
+            </div>
+            
+            <!-- Autres cabinets -->
+            <div class="location-card">
+              <div class="location-badge">🏥 Cabinet</div>
+              <h4 class="location-name">Cabinet Vétérinaire VITALFEED Montparnasse</h4>
+              <div class="location-details">
+                <div class="location-info">
+                  <span class="info-icon">📍</span>
+                  <span class="info-text">45 Rue de Rennes, 75006 Paris</span>
+                </div>
+                <div class="location-info">
+                  <span class="info-icon">📞</span>
+                  <span class="info-text">01 45 32 67 89</span>
+                </div>
+                <div class="location-info">
+                  <span class="info-icon">🕒</span>
+                  <span class="info-text">Lun-Sam: 9h30-19h30</span>
+                </div>
+              </div>
+              <div class="location-actions">
+                <button class="btn-location primary">🧭 Itinéraire</button>
+                <button class="btn-location secondary">📞 Appeler</button>
+              </div>
+            </div>
+            
+
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Call to Action Section -->
+    <div class="cta-section">
+      <div class="cta-card">
+        <div class="cta-content">
+          <h3 class="cta-title">Vous êtes un vétérinaire ?</h3>
+          <p class="cta-text">
+            Rejoignez notre communauté de vétérinaires et découvrez une application innovante 
+            conçue spécialement pour simplifier votre pratique quotidienne et améliorer 
+            la qualité des soins pour vos patients à quatre pattes.
+          </p>
+          <button class="btn-cta" (click)="navigateToVetSpace()">Découvrir l'Espace Vétérinaire</button>
+        </div>
+        <div class="cta-icon">👩‍⚕️</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Map Modal -->
+<div *ngIf="isMapMaximized" class="map-modal-overlay" (click)="minimizeMap()">
+  <div class="map-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3 class="modal-title">Carte Interactive - Vue Étendue</h3>
+      <button class="minimize-btn" (click)="minimizeMap()" title="Fermer">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-map-container">
+      <iframe
+        src="https://www.openstreetmap.org/export/embed.html?bbox=2.224,48.815,2.469,48.902&layer=mapnik&marker=48.8566,2.3522"
+        style="width:100%; height:100%; border:none; border-radius:8px;"
+        allowfullscreen
+        loading="lazy">
+      </iframe>
+    </div>
+  </div>
+</div>

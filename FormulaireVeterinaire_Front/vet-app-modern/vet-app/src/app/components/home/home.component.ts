@@ -1,6 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
+import { CartService } from '../../services/cart.service';
+
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  image: string;
+  category: string;
+  subCategory: string;
+  description: string;
+  inStock: boolean;
+}
 
 @Component({
   selector: 'app-home',
@@ -9,42 +21,189 @@ import { RouterModule } from '@angular/router';
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
-export class HomeComponent {
-  features = [
+export class HomeComponent implements OnDestroy {
+  // All available products
+  allProducts: Product[] = [
     {
-      title: 'Gestion des dossiers médicaux',
-      description: 'Créez et gérez facilement les dossiers médicaux de vos patients à quatre pattes.',
-      icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'
+      id: 1,
+      name: 'Croquettes Premium Chien Adulte',
+      price: 45.99,
+      image: '/assets/images/croquettes-chien.jpg',
+      category: 'Chien',
+      subCategory: 'Aliment',
+      description: 'Croquettes haute qualité pour chien adulte',
+      inStock: true
     },
     {
-      title: 'Planification des rendez-vous',
-      description: 'Organisez votre emploi du temps et envoyez des rappels automatiques aux propriétaires.',
-      icon: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'
+      id: 2,
+      name: 'Complément Vitaminé Chat',
+      price: 29.99,
+      image: '/assets/images/vitamines-chat.jpg',
+      category: 'Chat',
+      subCategory: 'Complément',
+      description: 'Vitamines essentielles pour chat',
+      inStock: true
     },
     {
-      title: 'Suivi des traitements',
-      description: 'Suivez les traitements prescrits et recevez des alertes pour les rappels de vaccination.',
-      icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'
+      id: 3,
+      name: 'Test Rapide FIV/FeLV',
+      price: 35.50,
+      image: '/assets/images/test-fiv.jpg',
+      category: 'Chat',
+      subCategory: 'Test rapide',
+      description: 'Test de dépistage rapide',
+      inStock: false
     },
     {
-      title: 'Facturation simplifiée',
-      description: 'Générez des factures et suivez les paiements en quelques clics.',
-      icon: 'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2z'
+      id: 4,
+      name: 'Pâtée Premium Chien Senior',
+      price: 38.99,
+      image: '/assets/images/patee-chien.jpg',
+      category: 'Chien',
+      subCategory: 'Aliment',
+      description: 'Alimentation adaptée aux chiens âgés',
+      inStock: true
+    },
+    {
+      id: 5,
+      name: 'Probiotiques Chat Digestif',
+      price: 42.00,
+      image: '/assets/images/probiotiques.jpg',
+      category: 'Chat',
+      subCategory: 'Complément',
+      description: 'Soutien de la flore intestinale',
+      inStock: true
+    },
+    {
+      id: 6,
+      name: 'Vitamines Chien Actif',
+      price: 33.90,
+      image: '/assets/images/vitamines-chien.jpg',
+      category: 'Chien',
+      subCategory: 'Complément',
+      description: 'Complément vitaminé pour chiens sportifs',
+      inStock: true
+    },
+    {
+      id: 7,
+      name: 'Test Rapide Parvo Chien',
+      price: 28.50,
+      image: '/assets/images/test-parvo.jpg',
+      category: 'Chien',
+      subCategory: 'Test rapide',
+      description: 'Test de dépistage du parvovirus',
+      inStock: true
+    },
+    {
+      id: 8,
+      name: 'Croquettes Premium Chat Stérilisé',
+      price: 42.90,
+      image: '/assets/images/croquettes-chat.jpg',
+      category: 'Chat',
+      subCategory: 'Aliment',
+      description: 'Alimentation spécialisée pour chats stérilisés',
+      inStock: true
     }
   ];
 
-  testimonials = [
-    {
-      name: 'Dr. Sophie Martin',
-      role: 'Vétérinaire à Paris',
-      content: 'Cette application a révolutionné ma pratique quotidienne. Je gagne un temps précieux sur les tâches administratives.',
-      avatar: 'assets/avatar-1.svg'
-    },
-    {
-      name: 'Dr. Thomas Dubois',
-      role: 'Clinique vétérinaire de Lyon',
-      content: 'Mes assistants et moi sommes ravis de la simplicité d\'utilisation et de l\'efficacité de cette solution.',
-      avatar: 'assets/avatar-2.svg'
+  // Dynamic selection of featured products
+  products: Product[] = [];
+  
+  // Carousel properties
+  currentSlide = 0;
+  autoSlideInterval: any;
+
+  constructor(private cartService: CartService, private router: Router) {
+    this.products = this.getFeaturedProducts();
+    this.startAutoSlide();
+  }
+
+  ngOnDestroy() {
+    if (this.autoSlideInterval) {
+      clearInterval(this.autoSlideInterval);
     }
-  ];
+  }
+
+  // Method to dynamically select diverse products for display
+  getFeaturedProducts(): Product[] {
+    const featured: Product[] = [];
+    const categories = ['Chien', 'Chat'];
+    const subCategories = ['Aliment', 'Complément', 'Test rapide'];
+    
+    // Try to get one product from each combination of category and subcategory
+    for (const category of categories) {
+      for (const subCategory of subCategories) {
+        const productInCategory = this.allProducts.find(p => 
+          p.category === category && 
+          p.subCategory === subCategory && 
+          !featured.includes(p)
+        );
+        
+        if (productInCategory && featured.length < 6) {
+          featured.push(productInCategory);
+        }
+      }
+    }
+    
+    // If we don't have enough, add some random popular products
+    if (featured.length < 6) {
+      const remaining = this.allProducts.filter(p => !featured.includes(p) && p.inStock);
+      while (featured.length < 6 && remaining.length > 0) {
+        const randomIndex = Math.floor(Math.random() * remaining.length);
+        featured.push(remaining.splice(randomIndex, 1)[0]);
+      }
+    }
+    
+    return featured;
+  }
+
+  addToCart(product: Product) {
+    this.cartService.addToCart(product);
+    console.log('Produit ajouté au panier:', product.name);
+  }
+
+  // Refresh featured products (for potential future use)
+  refreshFeaturedProducts(): void {
+    this.products = this.getFeaturedProducts();
+  }
+
+  // Carousel methods
+  startAutoSlide(): void {
+    this.autoSlideInterval = setInterval(() => {
+      this.nextSlide();
+    }, 4000); // Auto slide every 4 seconds
+  }
+
+  nextSlide(): void {
+    this.currentSlide = (this.currentSlide + 1) % this.products.length;
+  }
+
+  prevSlide(): void {
+    this.currentSlide = this.currentSlide === 0 ? this.products.length - 1 : this.currentSlide - 1;
+  }
+
+  goToSlide(index: number): void {
+    this.currentSlide = index;
+    // Restart auto slide when user manually changes slide
+    if (this.autoSlideInterval) {
+      clearInterval(this.autoSlideInterval);
+      this.startAutoSlide();
+    }
+  }
+
+  getSlideIndicators(): number[] {
+    return Array.from({ length: this.products.length }, (_, i) => i);
+  }
+
+  trackByProductId(index: number, product: Product): number {
+    return product.id;
+  }
+
+  trackByIndex(index: number): number {
+    return index;
+  }
+
+  navigateToVetSpace(): void {
+    this.router.navigate(['/espace-veterinaire']);
+  }
 }

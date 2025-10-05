@@ -1,210 +1,103 @@
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * The content below * * * * * * * * * * * -->
-<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * -->
-<!-- * * * * * * * * * * and can be replaced.  * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * Delete the template below * * * * * * * * * -->
-<!-- * * * * * * * to get started with your project! * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-
-<style>
-  :host {
-    --bright-blue: oklch(51.01% 0.274 263.83);
-    --electric-violet: oklch(53.18% 0.28 296.97);
-    --french-violet: oklch(47.66% 0.246 305.88);
-    --vivid-pink: oklch(69.02% 0.277 332.77);
-    --hot-red: oklch(61.42% 0.238 15.34);
-    --orange-red: oklch(63.32% 0.24 31.68);
-
-    --gray-900: oklch(19.37% 0.006 300.98);
-    --gray-700: oklch(36.98% 0.014 302.71);
-    --gray-400: oklch(70.9% 0.015 304.04);
-
-    --red-to-pink-to-purple-vertical-gradient: linear-gradient(
-      180deg,
-      var(--orange-red) 0%,
-      var(--vivid-pink) 50%,
-      var(--electric-violet) 100%
-    );
-
-    --red-to-pink-to-purple-horizontal-gradient: linear-gradient(
-      90deg,
-      var(--orange-red) 0%,
-      var(--vivid-pink) 50%,
-      var(--electric-violet) 100%
-    );
-
-    --pill-accent: var(--bright-blue);
-
-    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-      Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-      "Segoe UI Symbol";
-    box-sizing: border-box;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
-  h1 {
-    font-size: 3.125rem;
-    color: var(--gray-900);
-    font-weight: 500;
-    line-height: 100%;
-    letter-spacing: -0.125rem;
-    margin: 0;
-    font-family: "Inter Tight", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-      Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-      "Segoe UI Symbol";
-  }
-
-  p {
-    margin: 0;
-    color: var(--gray-700);
-  }
-
-  main {
-    width: 100%;
-    min-height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 1rem;
-    box-sizing: inherit;
-    position: relative;
-  }
-
-  .angular-logo {
-    max-width: 9.2rem;
-  }
-
-  .content {
-    display: flex;
-    justify-content: space-around;
-    width: 100%;
-    max-width: 700px;
-    margin-bottom: 3rem;
-  }
-
-  .content h1 {
-    margin-top: 1.75rem;
-  }
-
-  .content p {
-    margin-top: 1.5rem;
-  }
-
-  .divider {
-    width: 1px;
-    background: var(--red-to-pink-to-purple-vertical-gradient);
-    margin-inline: 0.5rem;
-  }
-
-  .pill-group {
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    flex-wrap: wrap;
-    gap: 1.25rem;
-  }
-
-  .pill {
-    display: flex;
-    align-items: center;
-    --pill-accent: var(--bright-blue);
-    background: color-mix(in srgb, var(--pill-accent) 5%, transparent);
-    color: var(--pill-accent);
-    padding-inline: 0.75rem;
-    padding-block: 0.375rem;
-    border-radius: 2.75rem;
-    border: 0;
-    transition: background 0.3s ease;
-    font-family: var(--inter-font);
-    font-size: 0.875rem;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 1.4rem;
-    letter-spacing: -0.00875rem;
-    text-decoration: none;
-  }
-
-  .pill:hover {
-    background: color-mix(in srgb, var(--pill-accent) 15%, transparent);
-  }
-
-  .pill-group .pill:nth-child(6n + 1) {
-    --pill-accent: var(--bright-blue);
-  }
-  .pill-group .pill:nth-child(6n + 2) {
-    --pill-accent: var(--french-violet);
-  }
-  .pill-group .pill:nth-child(6n + 3),
-  .pill-group .pill:nth-child(6n + 4),
-  .pill-group .pill:nth-child(6n + 5) {
-    --pill-accent: var(--hot-red);
-  }
-
-  .pill-group svg {
-    margin-inline-start: 0.25rem;
-  }
-
-  .social-links {
-    display: flex;
-    align-items: center;
-    gap: 0.73rem;
-    margin-top: 1.5rem;
-  }
-
-  .social-links path {
-    transition: fill 0.3s ease;
-    fill: var(--gray-400);
-  }
-
-  .social-links a:hover svg path {
-    fill: var(--gray-900);
-  }
-
-  @media screen and (max-width: 650px) {
-    .content {
-      flex-direction: column;
-      width: max-content;
-    }
-
-    .divider {
-      height: 1px;
-      width: 100%;
-      background: var(--red-to-pink-to-purple-horizontal-gradient);
-      margin-block: 1.5rem;
-    }
-  }
-</style>
-
 <!-- Header -->
 <div class="flex flex-col min-h-screen">
-  <header class="bg-white shadow-sm">
+  <header class="bg-white shadow-sm sticky top-0 z-50">
     <div class="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center py-4">
         <div class="flex items-center">
+          <!-- Hamburger Menu for Espace Proprietaire -->
+          <button *ngIf="isEspaceProprietaire && !isAdmin" class="hamburger-menu mr-4" (click)="toggleSidebar()"
+            [class.active]="sidebarOpen">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+
+          <!-- Hamburger Menu for Produits Veterinaire -->
+          <button *ngIf="isProduitsVeterinaire && !isAdmin" class="hamburger-menu mr-4"
+            (click)="toggleProduitsSidebar()" [class.active]="produitsSidebarOpen">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+
           <a routerLink="/" class="flex items-center">
             <div class="w-10 h-10 bg-vet-blue/10 rounded-full flex items-center justify-center mr-3">
-              <svg class="w-6 h-6 text-vet-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+              <svg class="w-6 h-6 text-vet-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
+                <path *ngIf="!isEspaceProprietaire && !isEspaceVeterinaire" stroke-linecap="round"
+                  stroke-linejoin="round" stroke-width="2"
+                  d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z">
+                </path>
+                <path *ngIf="isEspaceProprietaire" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                <path *ngIf="isEspaceVeterinaire" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
+                </path>
               </svg>
             </div>
-            <span class="text-xl font-bold text-vet-blue">vitalNutri</span>
+            <span class="text-xl font-bold text-vet-blue">{{ navbarTitle }}</span>
           </a>
         </div>
-        <nav class="hidden md:flex space-x-8">
-          <ng-container *ngIf="!isAdmin">
-            <a routerLink="/" routerLinkActive="text-vet-blue font-medium" [routerLinkActiveOptions]="{exact: true}" class="text-gray-600 hover:text-vet-blue transition-colors">Accueil</a>
-            <a routerLink="/formulaire" routerLinkActive="text-vet-blue font-medium" class="text-gray-600 hover:text-vet-blue transition-colors">Demander un accès</a>
-            <a routerLink="/login" routerLinkActive="text-vet-blue font-medium" class="text-gray-600 hover:text-vet-blue transition-colors">Connexion</a>
+        <nav class="hidden md:flex space-x-8 items-center">
+          <ng-container *ngIf="!isAdmin && !isEspaceProprietaire">
+            <a routerLink="/" routerLinkActive="text-vet-blue font-medium" [routerLinkActiveOptions]="{exact: true}"
+              class="text-gray-600 hover:text-vet-blue transition-colors">Accueil</a>
+            <a routerLink="/espace-proprietaire" routerLinkActive="text-vet-blue font-medium"
+              class="text-gray-600 hover:text-vet-blue transition-colors">Espace Propriétaire</a>
+            <a routerLink="/espace-veterinaire" routerLinkActive="text-vet-blue font-medium"
+              class="text-gray-600 hover:text-vet-blue transition-colors">Espace Vétérinaire</a>
+            <a routerLink="/login" routerLinkActive="text-vet-blue font-medium"
+              class="text-gray-600 hover:text-vet-blue transition-colors">Connexion Vétérinaire</a>
+          </ng-container>
+          <ng-container *ngIf="!isAdmin && isEspaceProprietaire">
+            <a routerLink="/" class="text-gray-600 hover:text-vet-blue transition-colors">Accueil</a>
+            <a routerLink="/espace-proprietaire" routerLinkActive="text-vet-blue font-medium"
+              class="text-gray-600 hover:text-vet-blue transition-colors">Espace Propriétaire</a>
+            <a routerLink="/login" routerLinkActive="text-vet-blue font-medium"
+              class="text-gray-600 hover:text-vet-blue transition-colors">Connexion Vétérinaire</a>
+            <!-- 
+            <button *ngIf="showCart" class="relative flex items-center justify-center w-10 h-10 bg-vet-blue hover:bg-blue-600 text-white rounded-lg transition-all duration-300 transform hover:scale-105">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.5 5M7 13v6a2 2 0 002 2h6a2 2 0 002-2v-6m-9 0h9"></path>
+              </svg>
+              <span *ngIf="cartItemsCount > 0" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">{{ cartItemsCount }}</span>
+            </button>
+            -->
+          </ng-container>
+          <!-- Cart for Produits Veterinaire -->
+          <ng-container *ngIf="isProduitsVeterinaire && !isAdmin">
+            <button *ngIf="showCart" routerLink="/panier"
+              class="relative flex items-center justify-center w-10 h-10 bg-vet-blue hover:bg-blue-600 text-white rounded-lg transition-all duration-300 transform hover:scale-105">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.5 5M7 13v6a2 2 0 002 2h6a2 2 0 002-2v-6m-9 0h9"></path>
+              </svg>
+              <span *ngIf="cartItemsCount > 0"
+                class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">{{
+                cartItemsCount }}</span>
+            </button>
           </ng-container>
           <ng-container *ngIf="isAdmin">
-            <button (click)="logout()" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-6 rounded-lg transition-all duration-300">Déconnexion</button>
+            <button (click)="logout()"
+              class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-6 rounded-lg transition-all duration-300">Déconnexion</button>
           </ng-container>
         </nav>
-        <div class="md:hidden">
+        <div class="md:hidden flex items-center space-x-3">
+          <!-- Mobile Shopping Cart -->
+          <button *ngIf="showCart && !isAdmin" routerLink="/panier"
+            class="relative flex items-center justify-center w-10 h-10 bg-vet-blue hover:bg-blue-600 text-white rounded-lg transition-all duration-300">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.5 5M7 13v6a2 2 0 002 2h6a2 2 0 002-2v-6m-9 0h9"></path>
+            </svg>
+            <span *ngIf="cartItemsCount > 0"
+              class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">{{
+              cartItemsCount }}</span>
+          </button>
+          <!-- Mobile menu button -->
           <button type="button" class="text-gray-600 hover:text-vet-blue">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
             </svg>
           </button>
@@ -215,7 +108,100 @@
 
   <!-- Main Content -->
   <main class="flex-grow">
-    <router-outlet></router-outlet>
+    <!-- Sidebar Layout for Espace Proprietaire -->
+    <div *ngIf="isEspaceProprietaire && !isAdmin" class="sidebar-layout">
+      <aside class="sidebar" [class.open]="sidebarOpen">
+        <div class="sidebar-content">
+          <div class="sidebar-section">
+            <h3 class="sidebar-title">MON ANIMAL</h3>
+            <div class="pill-buttons">
+              <button class="pill-btn" [class.active]="selectedProductFilter === 'tous'"
+                (click)="selectProductFilter('tous')">
+                Tous nos Produits
+              </button>
+              <button class="pill-btn" [class.active]="selectedProductFilter === 'chien'"
+                (click)="selectProductFilter('chien')">
+                🐶 Chien
+              </button>
+              <button class="pill-btn" [class.active]="selectedProductFilter === 'chat'"
+                (click)="selectProductFilter('chat')">
+                🐱 Chat
+              </button>
+            </div>
+          </div>
+
+          <div class="sidebar-section" *ngIf="selectedProductFilter !== 'tous' && getAvailableSubTypes().length > 0">
+            <h3 class="sidebar-title">TYPES DE PRODUITS</h3>
+            <div class="pill-buttons">
+              <button *ngFor="let subType of getAvailableSubTypes()" class="pill-btn sub-pill"
+                [class.active]="selectedSubType === subType.key" (click)="selectSubType(subType.key)">
+                {{ subType.label }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Separator line -->
+          <div class="sidebar-separator"></div>
+
+          <!-- Additional Navigation -->
+          <div class="sidebar-section">
+            <div class="pill-buttons">
+              <button class="pill-btn nav-link" (click)="navigateToProductLocations()">
+                Où trouver nos produits ?
+              </button>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <div class="main-content" [class.sidebar-open]="sidebarOpen">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+
+    <!-- Sidebar Layout for Produits Veterinaire -->
+    <div *ngIf="isProduitsVeterinaire && !isAdmin" class="sidebar-layout">
+      <aside class="sidebar" [class.open]="produitsSidebarOpen">
+        <div class="sidebar-content">
+          <div class="sidebar-section">
+            <h3 class="sidebar-title">MON ANIMAL</h3>
+            <div class="pill-buttons">
+              <button class="pill-btn" [class.active]="selectedProductFilter === 'tous'"
+                (click)="selectProductFilter('tous')">
+                Tous nos Produits
+              </button>
+              <button class="pill-btn" [class.active]="selectedProductFilter === 'chien'"
+                (click)="selectProductFilter('chien')">
+                🐶 Chien
+              </button>
+              <button class="pill-btn" [class.active]="selectedProductFilter === 'chat'"
+                (click)="selectProductFilter('chat')">
+                🐱 Chat
+              </button>
+            </div>
+          </div>
+
+          <div class="sidebar-section" *ngIf="selectedProductFilter !== 'tous' && getAvailableSubTypes().length > 0">
+            <h3 class="sidebar-title">TYPES DE PRODUITS</h3>
+            <div class="pill-buttons">
+              <button *ngFor="let subType of getAvailableSubTypes()" class="pill-btn sub-pill"
+                [class.active]="selectedSubType === subType.key" (click)="selectSubType(subType.key)">
+                {{ subType.label }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <div class="main-content" [class.sidebar-open]="produitsSidebarOpen">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+
+    <!-- Normal layout for other pages -->
+    <div *ngIf="!isEspaceProprietaire && !isProduitsVeterinaire || isAdmin">
+      <router-outlet></router-outlet>
+    </div>
   </main>
 
   <!-- Footer -->
@@ -225,74 +211,83 @@
         <div>
           <div class="flex items-center mb-4">
             <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center mr-3">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z">
+                </path>
               </svg>
             </div>
-            <span class="text-xl font-bold text-white">vitalNutri</span>
+            <span class="text-xl font-bold text-white">VITALFEED</span>
           </div>
-          <p class="text-gray-400">Une solution complète pour les vétérinaires spécialisés dans les soins pour chiens et chats.</p>
+          <p class="text-gray-400">Une solution complète pour les vétérinaires spécialisés dans les soins pour chiens et
+            chats.</p>
         </div>
-        
+
         <div>
           <h3 class="text-lg font-semibold mb-4">Liens rapides</h3>
           <ul class="space-y-2">
             <li><a routerLink="/" class="text-gray-400 hover:text-white transition-colors">Accueil</a></li>
-            <li><a routerLink="/formulaire" class="text-gray-400 hover:text-white transition-colors">Demander un accès</a></li>
+            <li><a routerLink="/formulaire" class="text-gray-400 hover:text-white transition-colors">Demander un
+                accès</a></li>
           </ul>
         </div>
-        
+
         <div>
           <h3 class="text-lg font-semibold mb-4">Contact</h3>
           <ul class="space-y-2 text-gray-400">
             <li class="flex items-center">
-              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                </path>
               </svg>
               contact&#64;vetcare-pro.fr
             </li>
             <li class="flex items-center">
-              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z">
+                </path>
               </svg>
               01 23 45 67 89
             </li>
           </ul>
         </div>
-        
+
         <div>
           <h3 class="text-lg font-semibold mb-4">Suivez-nous</h3>
           <div class="flex space-x-4">
             <a href="#" class="text-gray-400 hover:text-white transition-colors">
               <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"></path>
+                <path
+                  d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z">
+                </path>
               </svg>
             </a>
             <a href="#" class="text-gray-400 hover:text-white transition-colors">
               <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path>
+                <path
+                  d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84">
+                </path>
               </svg>
             </a>
             <a href="#" class="text-gray-400 hover:text-white transition-colors">
               <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z"></path>
+                <path
+                  d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.772 1.153 4.902 4.902 0 01-1.153 1.772c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z">
+                </path>
               </svg>
             </a>
           </div>
         </div>
       </div>
-      
+
       <div class="mt-12 pt-8 border-t border-gray-800 text-center text-gray-400">
-        <p>© 2025 vitalNutri. Tous droits réservés.</p>
+        <p>© 2025 VITALFEED. Tous droits réservés.</p>
       </div>
     </div>
   </footer>
 </div>
-
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * The content above * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * * -->
-<!-- * * * * * * * * * * and can be replaced.  * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * End of Placeholder  * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
