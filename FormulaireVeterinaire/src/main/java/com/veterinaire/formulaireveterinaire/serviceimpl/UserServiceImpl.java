@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 
@@ -29,37 +30,76 @@ public class UserServiceImpl implements UserService {
     private final OurVeterinaireRepository ourVeterinaireRepository;
     private final PasswordEncoder passwordEncoder;
     private final JavaMailSender mailSender;
-    private final String excelFilePath;
 
-
-    public UserServiceImpl(UserRepository userRepository, OurVeterinaireRepository ourVeterinaireRepository ,PasswordEncoder passwordEncoder,
-                           JavaMailSender mailSender, @Value("${excel.file.path}") String excelFilePath) {
+    public UserServiceImpl(UserRepository userRepository,
+                           OurVeterinaireRepository ourVeterinaireRepository,
+                           PasswordEncoder passwordEncoder,
+                           JavaMailSender mailSender) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
         this.ourVeterinaireRepository = ourVeterinaireRepository;
+        this.passwordEncoder = passwordEncoder;
         this.mailSender = mailSender;
-        this.excelFilePath = excelFilePath;
     }
 
     @Override
     public String registerUser(@Valid User user) {
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-            throw new RuntimeException("Un utilisateur avec cet email existe déjà");
-        }
-        if (!verifyMatricule(user.getNumMatricule())) {
+        // Vérifie si matricule existe dans la table vétérinaire
+        var veterinaireOpt = ourVeterinaireRepository.findByMatricule(user.getNumMatricule());
+        if (veterinaireOpt.isEmpty()) {
             throw new RuntimeException("Matricule non disponible");
         }
-        String generatedPassword = generateRandomPassword();
-        user.setPassword(passwordEncoder.encode(generatedPassword));
-        user.setStatus(SubscriptionStatus.INACTIVE);
-        userRepository.save(user);
-        sendWelcomeEmail(user.getEmail(), generatedPassword , user.getNom());
-        return "Utilisateur enregistré avec succès. Vérifiez votre email.";
+
+        // Vérifie si un utilisateur existe déjà avec ce matricule
+        Optional<User> existingUserOpt = userRepository.findByNumMatricule(user.getNumMatricule());
+
+        if (existingUserOpt.isPresent()) {
+            // 🟢 Cas 1 : utilisateur existant → mise à jour
+            User existingUser = existingUserOpt.get();
+
+            boolean emailChanged = !existingUser.getEmail().equalsIgnoreCase(user.getEmail());
+
+            // 🔄 Mise à jour des champs
+            existingUser.setNom(user.getNom());
+            existingUser.setPrenom(user.getPrenom());
+            existingUser.setEmail(user.getEmail());
+            existingUser.setTelephone(user.getTelephone());
+            existingUser.setAdresseCabinet(user.getAdresseCabinet());
+            existingUser.setAdmin(user.isAdmin());
+
+            boolean shouldSendMail = existingUser.getStatus() != SubscriptionStatus.ACTIVE || emailChanged;
+
+            if (shouldSendMail) {
+                // 📨 On génère un nouveau mot de passe et on envoie un mail
+                String newPassword = generateRandomPassword();
+                existingUser.setPassword(passwordEncoder.encode(newPassword));
+                sendWelcomeEmail(existingUser.getEmail(), newPassword, existingUser.getNom());
+                existingUser.setStatus(SubscriptionStatus.INACTIVE);
+            } else {
+                // 🚫 Aucun mail, on garde l'ancien mot de passe tel quel
+                logger.info("Aucun mail envoyé à {} (utilisateur actif sans changement d'email)", existingUser.getEmail());
+            }
+
+            userRepository.save(existingUser);
+            return shouldSendMail ?
+                    "Utilisateur mis à jour et email envoyé." :
+                    "Utilisateur mis à jour sans envoi d'email.";
+        }
+        else {
+            // 🆕 Cas 2 : nouvel utilisateur → création
+            if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+                throw new RuntimeException("Un utilisateur avec cet email existe déjà");
+            }
+
+            String generatedPassword = generateRandomPassword();
+            user.setPassword(passwordEncoder.encode(generatedPassword));
+            user.setStatus(SubscriptionStatus.INACTIVE);
+            userRepository.save(user);
+
+            sendWelcomeEmail(user.getEmail(), generatedPassword, user.getNom());
+            return "Nouvel utilisateur enregistré avec succès. Vérifiez votre email.";
+        }
     }
 
-    private boolean verifyMatricule(String numMatricule) {
-        return ourVeterinaireRepository.findByMatricule(numMatricule).isPresent();
-    }
 
     @Override
     public Optional<User> findByEmail(String email) {

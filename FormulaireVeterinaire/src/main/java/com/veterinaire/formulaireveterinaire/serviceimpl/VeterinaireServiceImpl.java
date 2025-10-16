@@ -1,5 +1,6 @@
 package com.veterinaire.formulaireveterinaire.serviceimpl;
 
+import com.veterinaire.formulaireveterinaire.DTO.UserDTO;
 import com.veterinaire.formulaireveterinaire.Enums.SubscriptionType;
 import com.veterinaire.formulaireveterinaire.DAO.UserRepository;
 import com.veterinaire.formulaireveterinaire.entity.User;
@@ -30,6 +31,7 @@ public class VeterinaireServiceImpl implements VeterinaireService {
     public VeterinaireServiceImpl(UserRepository userRepository, JavaMailSender mailSender) {
         this.userRepository = userRepository;
         this.mailSender = mailSender;
+
     }
 
     @Value("${finance.email}")
@@ -68,6 +70,31 @@ public class VeterinaireServiceImpl implements VeterinaireService {
         sendSubscriptionEmail(user.getEmail(), user.getNom(),subscriptionType.name(), financeEmail);
         return "Profil vétérinaire mis à jour avec succès pour l'utilisateur ID " + userId + ".";
     }
+    // ✅ Nouvelle méthode getById
+    @Override
+    public UserDTO getVeterinaireById(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Vétérinaire non trouvé avec l'ID : " + userId));
+
+        return mapToDTO(user);
+    }
+
+    // ✅ Méthode de mapping vers ton DTO
+    private UserDTO mapToDTO(User user) {
+        UserDTO dto = new UserDTO();
+        dto.setId(user.getId());
+        dto.setNom(user.getNom());
+        dto.setPrenom(user.getPrenom());
+        dto.setEmail(user.getEmail());
+        dto.setTelephone(user.getTelephone());
+        dto.setAdresseCabinet(user.getAdresseCabinet());
+        dto.setNumMatricule(user.getNumMatricule());
+        dto.setStatus(user.getStatus().name());
+        dto.setSubscription(user.getSubscription() != null ? user.getSubscription().toString() : null);
+        return dto;
+    }
+
+
 
     private void sendSubscriptionEmail(String to, String nom, String subscriptionType, String financeEmail) {
         MimeMessage message = mailSender.createMimeMessage();

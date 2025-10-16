@@ -1,14 +1,13 @@
 package com.veterinaire.formulaireveterinaire.controller;
 
+import com.veterinaire.formulaireveterinaire.DTO.UserDTO;
 import com.veterinaire.formulaireveterinaire.Enums.SubscriptionType;
+import com.veterinaire.formulaireveterinaire.entity.User;
 import com.veterinaire.formulaireveterinaire.service.UserService;
 import com.veterinaire.formulaireveterinaire.service.VeterinaireService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
@@ -37,5 +36,11 @@ public class VeterinaireController {
 
         String result = veterinaireService.updateVeterinaireProfile(userId, image, subscriptionType);
         return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDTO> getVeterinaireById(@PathVariable Long id) {
+        UserDTO userDTO = veterinaireService.getVeterinaireById(id);
+        return ResponseEntity.ok(userDTO);
     }
 }

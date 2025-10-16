@@ -57,6 +57,8 @@ public class AuthServiceImpl implements AuthService {
 
             response.put("isAdmin", user.isAdmin());
 
+            response.put("userId", user.getId());
+
             return response;
         } catch (AuthenticationException e) {
             throw new RuntimeException("Unauthorized: Bad credentials", e);
