@@ -28,9 +28,10 @@ export class ProductService {
 
   /**
    * Get all products from backend
+   * No authentication required for viewing products
    */
   getAllProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(`${this.apiUrl}/all`, this.getAuthHeaders()).pipe(
+    return this.http.get<Product[]>(`${this.apiUrl}/all`).pipe(
       retry(2), // Retry failed requests up to 2 times
       map(products => this.normalizeProducts(products)),
       catchError(this.handleError)

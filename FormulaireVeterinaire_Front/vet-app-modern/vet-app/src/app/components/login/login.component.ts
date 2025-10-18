@@ -16,6 +16,7 @@ export class LoginComponent {
   submitted = false;
   loading = false;
   error = '';
+  showPassword = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -24,11 +25,15 @@ export class LoginComponent {
   ) {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]]
+      password: ['', [Validators.required]]
     });
   }
 
   get f() { return this.loginForm.controls; }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
 
   onSubmit() {
     this.submitted = true;

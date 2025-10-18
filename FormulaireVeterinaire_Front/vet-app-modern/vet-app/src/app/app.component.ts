@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, NavigationEnd, RouterModule } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { CartService } from './services/cart.service';
+import { AuthMonitorService } from './services/auth-monitor.service';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +12,7 @@ import { CartService } from './services/cart.service';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'vet-app';
   currentRoute: string = '';
   cartItemsCount: number = 0;
@@ -27,7 +28,11 @@ export class AppComponent {
     { key: 'test-rapide', label: 'Test rapide', animals: ['chien', 'chat'] }
   ];
 
-  constructor(private router: Router, private cartService: CartService) {
+  constructor(
+    private router: Router, 
+    private cartService: CartService,
+    private authMonitor: AuthMonitorService
+  ) {
     // Listen to route changes
     this.router.events.pipe(
       filter((event): event is NavigationEnd => event instanceof NavigationEnd)
@@ -42,6 +47,11 @@ export class AppComponent {
     this.cartService.cartCount$.subscribe(count => {
       this.cartItemsCount = count;
     });
+  }
+
+  ngOnInit(): void {
+    // Start monitoring authentication state on route changes
+    this.authMonitor.startMonitoring();
   }
 
   get isAdmin(): boolean {

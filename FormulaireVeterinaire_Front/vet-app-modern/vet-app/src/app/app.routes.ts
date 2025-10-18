@@ -7,12 +7,15 @@ import { AdminLayoutComponent } from './components/admin-layout/admin-layout.com
 import { AdminDashboardComponent } from './components/admin-dashboard/admin-dashboard.component';
 import { AdminComponent } from './components/admin/admin.component';
 import { AdminProductsComponent } from './components/admin-products/admin-products.component';
+import { AdminSubscriptionsComponent } from './components/admin-subscriptions/admin-subscriptions.component';
+import { AdminVeterinairesComponent } from './components/admin-veterinaires/admin-veterinaires.component';
 import { EspaceProprietaireComponent } from './components/espace-proprietaire/espace-proprietaire.component';
 import { OuTrouverNosProduitsComponent } from './components/ou-trouver-nos-produits/ou-trouver-nos-produits.component';
 import { EspaceVeterinaireComponent } from './components/espace-veterinaire/espace-veterinaire.component';
 import { ProduitsVeterinaireComponent } from './components/produits-veterinaire/produits-veterinaire.component';
 import { PanierComponent } from './components/panier/panier.component';
 import { FormulaireVetComponent } from './components/formulaire-vet/formulaire-vet.component';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -20,19 +23,21 @@ export const routes: Routes = [
   { path: 'formulaireVet', component: FormulaireVetComponent },
   { path: 'confirmation', component: ConfirmationComponent },
   { path: 'login', component: LoginComponent },
-  { 
-    path: 'admin', 
+  {
+    path: 'admin',
     component: AdminLayoutComponent,
     children: [
       { path: '', component: AdminDashboardComponent },
-      { path: 'subscriptions', component: AdminComponent },
-      { path: 'products', component: AdminProductsComponent }
+      { path: 'subscriptions', component: AdminSubscriptionsComponent },
+      { path: 'veterinaires', component: AdminVeterinairesComponent },
+      { path: 'products', component: AdminProductsComponent },
+      { path: 'users', component: AdminComponent }
     ]
   },
   { path: 'espace-proprietaire', component: EspaceProprietaireComponent },
   { path: 'ou-trouver-nos-produits', component: OuTrouverNosProduitsComponent },
   { path: 'espace-veterinaire', component: EspaceVeterinaireComponent },
   { path: 'produits-veterinaire', component: ProduitsVeterinaireComponent },
-  { path: 'panier', component: PanierComponent },
+  { path: 'panier', component: PanierComponent, canActivate: [authGuard] },
   { path: '**', redirectTo: '' },
 ];

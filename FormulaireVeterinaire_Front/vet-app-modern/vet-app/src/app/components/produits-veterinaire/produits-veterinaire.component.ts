@@ -145,6 +145,16 @@ export class ProduitsVeterinaireComponent implements OnInit {
   passwordError = '';
   passwordSuccess = '';
   
+  // Password visibility toggles
+  showCurrentPassword = false;
+  showNewPassword = false;
+  showConfirmPassword = false;
+  
+  // Password strength
+  passwordStrength = 0;
+  passwordStrengthText = '';
+  passwordStrengthColor = '';
+  
   // User info
   userName: string = '';
   userFullName: string = '';
@@ -158,9 +168,15 @@ export class ProduitsVeterinaireComponent implements OnInit {
     private formBuilder: FormBuilder
   ) {
     this.passwordForm = this.formBuilder.group({
-      newPassword: ['', [Validators.required, Validators.minLength(8)]],
+      currentPassword: ['', [Validators.required]],
+      newPassword: ['', [Validators.required, Validators.minLength(8), this.passwordStrengthValidator]],
       confirmPassword: ['', [Validators.required]]
     }, { validators: this.passwordMatchValidator });
+    
+    // Watch for password changes to update strength indicator
+    this.passwordForm.get('newPassword')?.valueChanges.subscribe(password => {
+      this.updatePasswordStrength(password);
+    });
   }
 
   passwordMatchValidator(form: FormGroup) {
@@ -172,6 +188,83 @@ export class ProduitsVeterinaireComponent implements OnInit {
       return { passwordMismatch: true };
     }
     return null;
+  }
+
+  /**
+   * Custom validator for password strength
+   */
+  passwordStrengthValidator(control: any) {
+    const password = control.value;
+    if (!password) return null;
+
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    const hasMinLength = password.length >= 8;
+
+    const errors: any = {};
+    if (!hasUpperCase) errors.noUpperCase = true;
+    if (!hasSpecialChar) errors.noSpecialChar = true;
+    if (!hasMinLength) errors.minLength = true;
+
+    return Object.keys(errors).length > 0 ? errors : null;
+  }
+
+  /**
+   * Update password strength indicator
+   */
+  updatePasswordStrength(password: string): void {
+    if (!password) {
+      this.passwordStrength = 0;
+      this.passwordStrengthText = '';
+      this.passwordStrengthColor = '';
+      return;
+    }
+
+    let strength = 0;
+    const checks = {
+      length: password.length >= 8,
+      uppercase: /[A-Z]/.test(password),
+      lowercase: /[a-z]/.test(password),
+      number: /[0-9]/.test(password),
+      special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+    };
+
+    if (checks.length) strength += 20;
+    if (checks.uppercase) strength += 20;
+    if (checks.lowercase) strength += 20;
+    if (checks.number) strength += 20;
+    if (checks.special) strength += 20;
+
+    this.passwordStrength = strength;
+
+    if (strength <= 40) {
+      this.passwordStrengthText = 'Faible';
+      this.passwordStrengthColor = '#ef4444';
+    } else if (strength <= 60) {
+      this.passwordStrengthText = 'Moyen';
+      this.passwordStrengthColor = '#f59e0b';
+    } else if (strength <= 80) {
+      this.passwordStrengthText = 'Bon';
+      this.passwordStrengthColor = '#3b82f6';
+    } else {
+      this.passwordStrengthText = 'Excellent';
+      this.passwordStrengthColor = '#10b981';
+    }
+  }
+
+  /**
+   * Toggle password visibility
+   */
+  toggleCurrentPasswordVisibility(): void {
+    this.showCurrentPassword = !this.showCurrentPassword;
+  }
+
+  toggleNewPasswordVisibility(): void {
+    this.showNewPassword = !this.showNewPassword;
+  }
+
+  toggleConfirmPasswordVisibility(): void {
+    this.showConfirmPassword = !this.showConfirmPassword;
   }
 
   ngOnInit() {
@@ -255,6 +348,13 @@ export class ProduitsVeterinaireComponent implements OnInit {
 
     // Redirect to home page
     this.router.navigate(['/']);
+  }
+
+  /**
+   * Navigate to panier (cart) page
+   */
+  navigateToPanier(): void {
+    this.router.navigate(['/panier']);
   }
 
   /**
@@ -502,6 +602,7 @@ export class ProduitsVeterinaireComponent implements OnInit {
     });
 
     const body = {
+      currentPassword: this.passwordForm.value.currentPassword,
       newPassword: this.passwordForm.value.newPassword
     };
 
@@ -519,13 +620,32 @@ export class ProduitsVeterinaireComponent implements OnInit {
         this.passwordLoading = false;
         console.error('Password change error:', error);
 
+        // Try to get the error message from the API response
+        let errorMessage = 'Une erreur est survenue. Veuillez réessayer.';
+        
         if (error.status === 401) {
-          this.passwordError = 'Session expirée. Veuillez vous reconnecter.';
+          errorMessage = 'Session expirée. Veuillez vous reconnecter.';
         } else if (error.status === 400) {
-          this.passwordError = 'Le mot de passe ne respecte pas les critères requis.';
-        } else {
-          this.passwordError = 'Une erreur est survenue. Veuillez réessayer.';
+          // Check if there's a specific error message from the API
+          let apiError = '';
+          if (error.error && typeof error.error === 'string') {
+            apiError = error.error;
+          } else if (error.error?.message) {
+            apiError = error.error.message;
+          }
+          
+          // Translate common API errors to French
+          if (apiError.toLowerCase().includes('current password is incorrect') || 
+              apiError.toLowerCase().includes('mot de passe actuel incorrect')) {
+            errorMessage = 'Le mot de passe actuel est incorrect.';
+          } else if (apiError) {
+            errorMessage = apiError;
+          } else {
+            errorMessage = 'Le mot de passe ne respecte pas les critères requis.';
+          }
         }
+        
+        this.passwordError = errorMessage;
       }
     });
   }
