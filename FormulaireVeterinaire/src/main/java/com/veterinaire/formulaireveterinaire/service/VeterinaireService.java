@@ -9,4 +9,6 @@ public interface VeterinaireService {
 
     UserDTO getVeterinaireById(Long userId);
 
+
+    UserDTO getVeterinaireByEmail(String email);
 }

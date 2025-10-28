@@ -5,6 +5,7 @@ import com.veterinaire.formulaireveterinaire.DAO.SubscriptionRepository;
 import com.veterinaire.formulaireveterinaire.DAO.UserRepository;
 import com.veterinaire.formulaireveterinaire.entity.Subscription;
 import com.veterinaire.formulaireveterinaire.entity.User;
+import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,17 +38,31 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final UserRepository userRepository;
 
     private static final List<String> PERMIT_ALL_ENDPOINTS = Arrays.asList(
-            "/api/login", "/api/users/register", "/api/demandes"
+            "/api/login", "/api/users/register"
     );
+
+    private static final List<String> SKIP_SUBSCRIPTION_CHECK_ENDPOINTS = Arrays.asList(
+            "/api/veterinaires/me",
+            "/api/veterinaires/all",
+            "/api/logout",
+            "/api/reset-password",
+            "/api/cart"
+    );
+
+
+
+
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+
         String requestURI = request.getRequestURI();
         logger.debug("Processing request for URI: {}", requestURI);
         logger.debug("Request method: {}", request.getMethod());
 
-        // Use startsWith to support flexible paths like query params or trailing slashes
+        // Skip authentication for permitAll endpoints
         boolean isPermitAll = PERMIT_ALL_ENDPOINTS.stream().anyMatch(requestURI::startsWith);
         if (isPermitAll) {
             logger.debug("Skipping authentication for permitAll endpoint: {}", requestURI);
@@ -55,34 +70,45 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        String header = request.getHeader("Authorization");
         String token = null;
         String email = null;
 
-        if (header != null && header.startsWith("Bearer ")) {
-            token = header.substring(7);
-            try {
-                email = jwtUtil.extractEmail(token);
-            } catch (Exception e) {
-                logger.error("Failed to extract email from token: {}", e.getMessage());
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.setContentType("application/json");
-                response.getWriter().write("{\"error\": \"Invalid token format\"}");
-                return;
+        // Extract token from cookies
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("access_token".equals(cookie.getName())) {
+                    token = cookie.getValue();
+                    try {
+                        email = jwtUtil.extractEmail(token);
+                    } catch (Exception e) {
+                        logger.error("Invalid token: {}", e.getMessage());
+                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                        response.setContentType("application/json");
+                        response.getWriter().write("{\"error\": \"Invalid token format\"}");
+                        return;
+                    }
+                    break;
+                }
             }
         }
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            final String finalEmail = email;
+            final String finalEmail = email; // ✅ make it effectively final
+
             UserDetails userDetails = userDetailsService.loadUserByUsername(finalEmail);
 
             if (userDetails != null && jwtUtil.validateToken(token, finalEmail)) {
                 User user = userRepository.findByEmail(finalEmail)
                         .orElseThrow(() -> new RuntimeException("User not found: " + finalEmail));
 
-                if (!user.isAdmin() && user.getStatus() == SubscriptionStatus.ACTIVE) {
+                boolean skipSubscriptionCheck = SKIP_SUBSCRIPTION_CHECK_ENDPOINTS.stream()
+                        .anyMatch(requestURI::startsWith);
+
+                if (!user.isAdmin() && !skipSubscriptionCheck) {
                     Subscription subscription = subscriptionRepository.findByUserEmail(finalEmail)
                             .orElseThrow(() -> new RuntimeException("No subscription found for user: " + finalEmail));
+
                     if (subscription.getEndDate().isBefore(LocalDateTime.now())) {
                         logger.warn("Subscription expired for user: {}", finalEmail);
                         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -90,6 +116,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         response.getWriter().write("{\"error\": \"Subscription expired\"}");
                         return;
                     }
+                } else {
+                    logger.debug("Skipping subscription check for endpoint {} or admin user", requestURI);
                 }
 
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
@@ -100,9 +128,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             } else {
                 logger.warn("Invalid token or user details for email: {}", finalEmail);
             }
-        } else {
-            logger.debug("No token or authentication present for URI: {}", requestURI);
         }
+
 
         filterChain.doFilter(request, response);
     }

@@ -44,13 +44,15 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/login", "/api/users/register", "/api/demandes").permitAll()
+                        .requestMatchers("/api/login", "/api/logout" ,"/api/users/register").permitAll()
                         .requestMatchers("/api/reset-password").authenticated()
-                        .requestMatchers("/api/users/**", "/api/demandes/all").hasRole("ADMIN")
+                        .requestMatchers("/api/users/**").hasRole("ADMIN")
                         .requestMatchers("/api/products/all").permitAll()
-                     //  .requestMatchers("/api/veterinaires/update").permitAll()
-                        .requestMatchers("/api/veterinaires/**").permitAll()
                         .requestMatchers("/api/cabinets/all").permitAll()
+
+                     //  .requestMatchers("/api/veterinaires/update").permitAll()
+                        //.requestMatchers("/api/veterinaires/**").permitAll()
+
 
 
 

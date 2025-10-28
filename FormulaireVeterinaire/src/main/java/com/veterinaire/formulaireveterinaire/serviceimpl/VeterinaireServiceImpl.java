@@ -1,8 +1,10 @@
 package com.veterinaire.formulaireveterinaire.serviceimpl;
 
+import com.veterinaire.formulaireveterinaire.DTO.SubscriptionDTO;
 import com.veterinaire.formulaireveterinaire.DTO.UserDTO;
 import com.veterinaire.formulaireveterinaire.Enums.SubscriptionType;
 import com.veterinaire.formulaireveterinaire.DAO.UserRepository;
+import com.veterinaire.formulaireveterinaire.entity.Subscription;
 import com.veterinaire.formulaireveterinaire.entity.User;
 import com.veterinaire.formulaireveterinaire.entity.VeterinaireProfile;
 import com.veterinaire.formulaireveterinaire.service.VeterinaireService;
@@ -70,6 +72,8 @@ public class VeterinaireServiceImpl implements VeterinaireService {
         sendSubscriptionEmail(user.getEmail(), user.getNom(),subscriptionType.name(), financeEmail);
         return "Profil vétérinaire mis à jour avec succès pour l'utilisateur ID " + userId + ".";
     }
+
+
     // ✅ Nouvelle méthode getById
     @Override
     public UserDTO getVeterinaireById(Long userId) {
@@ -78,6 +82,13 @@ public class VeterinaireServiceImpl implements VeterinaireService {
 
         return mapToDTO(user);
     }
+
+    public UserDTO getVeterinaireByEmail(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return mapToDTO(user); // whatever mapping you already use
+    }
+
 
     // ✅ Méthode de mapping vers ton DTO
     private UserDTO mapToDTO(User user) {
@@ -90,9 +101,20 @@ public class VeterinaireServiceImpl implements VeterinaireService {
         dto.setAdresseCabinet(user.getAdresseCabinet());
         dto.setNumMatricule(user.getNumMatricule());
         dto.setStatus(user.getStatus().name());
-        dto.setSubscription(user.getSubscription() != null ? user.getSubscription().toString() : null);
+
+        if (user.getSubscription() != null) {
+            Subscription sub = user.getSubscription();
+            SubscriptionDTO subDto = new SubscriptionDTO();
+            subDto.setId(sub.getId());
+            subDto.setSubscriptionType(sub.getSubscriptionType().name());
+            subDto.setStartDate(sub.getStartDate());
+            subDto.setEndDate(sub.getEndDate());
+            dto.setSubscription(subDto);
+        }
+
         return dto;
     }
+
 
 
 

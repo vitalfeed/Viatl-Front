@@ -5,8 +5,13 @@ import com.veterinaire.formulaireveterinaire.Enums.SubscriptionType;
 import com.veterinaire.formulaireveterinaire.entity.User;
 import com.veterinaire.formulaireveterinaire.service.UserService;
 import com.veterinaire.formulaireveterinaire.service.VeterinaireService;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,9 +43,18 @@ public class VeterinaireController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UserDTO> getVeterinaireById(@PathVariable Long id) {
-        UserDTO userDTO = veterinaireService.getVeterinaireById(id);
-        return ResponseEntity.ok(userDTO);
+    @GetMapping("/me")
+    public ResponseEntity<UserDTO> getLoggedInVeterinaire(HttpServletRequest request) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !(auth.getPrincipal() instanceof UserDetails)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        UserDetails userDetails = (UserDetails) auth.getPrincipal();
+        UserDTO userDTO = veterinaireService.getVeterinaireByEmail(userDetails.getUsername());
+        return ResponseEntity.ok(userDTO); // subscription info included even if expired
     }
+
+
+
 }

@@ -12,5 +12,5 @@ public class UserDTO {
     private String adresseCabinet;
     private String numMatricule;
     private String status;
-    private String subscription;
+    private SubscriptionDTO subscription;
 }

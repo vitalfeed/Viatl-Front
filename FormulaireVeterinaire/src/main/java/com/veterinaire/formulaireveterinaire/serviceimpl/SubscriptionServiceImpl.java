@@ -166,8 +166,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         dto.setId(subscription.getId());
         dto.setUser(userDTO);
         dto.setSubscriptionType(subscription.getSubscriptionType().name());
-        dto.setStartDate(subscription.getStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
-        dto.setEndDate(subscription.getEndDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        dto.setStartDate(subscription.getStartDate());
+        dto.setEndDate(subscription.getEndDate());
         return dto;
     }
 

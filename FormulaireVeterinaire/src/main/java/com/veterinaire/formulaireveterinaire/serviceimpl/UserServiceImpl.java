@@ -1,10 +1,12 @@
 package com.veterinaire.formulaireveterinaire.serviceimpl;
 
+import com.veterinaire.formulaireveterinaire.DTO.SubscriptionDTO;
 import com.veterinaire.formulaireveterinaire.DTO.UserDTO;
 import com.veterinaire.formulaireveterinaire.Enums.SubscriptionStatus;
 
 import com.veterinaire.formulaireveterinaire.DAO.OurVeterinaireRepository;
 import com.veterinaire.formulaireveterinaire.DAO.UserRepository;
+import com.veterinaire.formulaireveterinaire.entity.Subscription;
 import com.veterinaire.formulaireveterinaire.entity.User;
 import com.veterinaire.formulaireveterinaire.service.UserService;
 import jakarta.mail.MessagingException;
@@ -101,6 +103,8 @@ public class UserServiceImpl implements UserService {
             return "Nouvel utilisateur enregistré avec succès. Vérifiez votre email.";
         }
     }
+
+
     @Override
     public List<UserDTO> getAllUsers() {
         logger.info("Fetching all users except ID 1");  // Safe: logging a string, not objects
@@ -125,24 +129,21 @@ public class UserServiceImpl implements UserService {
         // Map status (assuming enum)
         dto.setStatus(user.getStatus() != null ? user.getStatus().name() : null);
 
-        // Map Subscription: Use ID as fallback string (adjust if better field exists)
+        // Map Subscription to SubscriptionDTO
         if (user.getSubscription() != null) {
-            // Primary: Use getId() if available (convert to String)
-            Long subId = user.getSubscription().getId();
-            dto.setSubscription(subId != null ? subId.toString() : "Unknown");
-
-            // Alternative: If autocomplete shows getName(), replace with:
-            // dto.setSubscription(user.getSubscription().getName());
-
-            // Alternative: HashCode as unique temp ID (not human-readable)
-            // dto.setSubscription(String.valueOf(user.getSubscription().hashCode()));
+            Subscription subscription = user.getSubscription();
+            SubscriptionDTO subscriptionDTO = new SubscriptionDTO();
+            subscriptionDTO.setId(subscription.getId());
+            subscriptionDTO.setSubscriptionType(subscription.getSubscriptionType() != null ? subscription.getSubscriptionType().name() : null);
+            subscriptionDTO.setStartDate(subscription.getStartDate());
+            subscriptionDTO.setEndDate(subscription.getEndDate());
+            dto.setSubscription(subscriptionDTO);
         } else {
             dto.setSubscription(null);
         }
 
         return dto;
     }
-
 
 
     @Override
