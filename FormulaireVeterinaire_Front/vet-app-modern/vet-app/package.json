@@ -4,15 +4,13 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --prod",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "analyze:images": "node scripts/optimize-images.js",
     "compress:images": "node scripts/compress-images.js",
     "optimize:images": "npm run analyze:images && npm run compress:images",
-    "vercel-build": "node ./scripts/set-env.js && ng build --configuration production",
-    "build": "ng build --configuration production",
-    "start": "ng serve"
+    "vercel-build": "npm install --legacy-peer-deps && ng build --configuration=production"
   },
   "private": true,
   "dependencies": {
