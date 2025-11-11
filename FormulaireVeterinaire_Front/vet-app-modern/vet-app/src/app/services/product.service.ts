@@ -172,17 +172,18 @@ export class ProductService {
    * Handle HTTP errors
    */
   private handleError(error: HttpErrorResponse): Observable<never> {
-    let errorMessage = 'Une erreur est survenue lors du chargement des produits.';
+    // User-friendly error message without exposing API details
+    const errorMessage = 'Impossible de charger les produits pour le moment. Veuillez réessayer plus tard.';
 
+    // Log detailed error for debugging (only visible in console)
     if (error.error instanceof ErrorEvent) {
       // Client-side error
-      errorMessage = `Erreur: ${error.error.message}`;
+      console.error('ProductService Error:', error.error.message);
     } else {
       // Server-side error
-      errorMessage = `Erreur ${error.status}: ${error.message}`;
+      console.error('ProductService Error:', `Status ${error.status}: ${error.message}`);
     }
 
-    console.error('ProductService Error:', errorMessage);
     return throwError(() => new Error(errorMessage));
   }
 }
