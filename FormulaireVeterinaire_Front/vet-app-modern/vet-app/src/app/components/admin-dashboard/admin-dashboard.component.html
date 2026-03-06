@@ -102,7 +102,7 @@
           </div>
         </div>
 
-        <!-- Total Boutiques -->
+        <!-- Total Cabinets -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
           <div class="flex items-center justify-between mb-4">
             <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center">
@@ -113,10 +113,10 @@
               </svg>
             </div>
           </div>
-          <h3 class="text-gray-600 text-sm font-medium mb-1">Boutiques</h3>
-          <p class="text-3xl font-bold text-gray-900 mb-2">{{ stats.totalBoutiques }}</p>
+          <h3 class="text-gray-600 text-sm font-medium mb-1">Cabinets</h3>
+          <p class="text-3xl font-bold text-gray-900 mb-2">{{ stats.totalCabinets }}</p>
           <div class="flex items-center text-sm">
-            <span class="text-indigo-600 font-medium">⭐ {{ stats.featuredBoutiques }} principales</span>
+            <span class="text-indigo-600 font-medium">⭐ {{ stats.featuredCabinets }} principaux</span>
           </div>
         </div>
 
@@ -170,41 +170,41 @@
       <!-- Charts and Recent Activity -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
 
-        <!-- Boutiques Overview -->
+        <!-- Cabinets Overview -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <h3 class="text-lg font-bold text-gray-900 mb-6">Aperçu des Boutiques</h3>
+          <h3 class="text-lg font-bold text-gray-900 mb-6">Aperçu des Cabinets</h3>
           <div class="space-y-4">
             <div class="flex items-center gap-4">
               <div class="flex-1">
                 <div class="flex items-center justify-between mb-2">
-                  <span class="text-sm font-medium text-gray-700">⭐ Boutiques Principales</span>
-                  <span class="text-sm font-bold text-gray-900">{{ stats.featuredBoutiques }}</span>
+                  <span class="text-sm font-medium text-gray-700">⭐ Cabinets Principaux</span>
+                  <span class="text-sm font-bold text-gray-900">{{ stats.featuredCabinets }}</span>
                 </div>
                 <div class="w-full bg-gray-200 rounded-full h-3">
                   <div
                     class="h-3 rounded-full transition-all duration-500 bg-gradient-to-r from-indigo-500 to-indigo-600"
-                    [style.width.%]="getPercentage(stats.featuredBoutiques, stats.totalBoutiques)"></div>
+                    [style.width.%]="getPercentage(stats.featuredCabinets, stats.totalCabinets)"></div>
                 </div>
               </div>
             </div>
             <div class="flex items-center gap-4">
               <div class="flex-1">
                 <div class="flex items-center justify-between mb-2">
-                  <span class="text-sm font-medium text-gray-700">🏪 Boutiques Standard</span>
-                  <span class="text-sm font-bold text-gray-900">{{ stats.totalBoutiques - stats.featuredBoutiques
+                  <span class="text-sm font-medium text-gray-700">🏪 Cabinets Standard</span>
+                  <span class="text-sm font-bold text-gray-900">{{ stats.totalCabinets - stats.featuredCabinets
                     }}</span>
                 </div>
                 <div class="w-full bg-gray-200 rounded-full h-3">
                   <div class="h-3 rounded-full transition-all duration-500 bg-gradient-to-r from-blue-400 to-blue-500"
-                    [style.width.%]="getPercentage(stats.totalBoutiques - stats.featuredBoutiques, stats.totalBoutiques)">
+                    [style.width.%]="getPercentage(stats.totalCabinets - stats.featuredCabinets, stats.totalCabinets)">
                   </div>
                 </div>
               </div>
             </div>
             <div class="mt-6 p-4 bg-indigo-50 rounded-lg">
               <div class="flex items-center justify-between">
-                <span class="text-sm font-semibold text-indigo-900">Total des Boutiques</span>
-                <span class="text-2xl font-bold text-indigo-600">{{ stats.totalBoutiques }}</span>
+                <span class="text-sm font-semibold text-indigo-900">Total des Cabinets</span>
+                <span class="text-2xl font-bold text-indigo-600">{{ stats.totalCabinets }}</span>
               </div>
             </div>
           </div>
@@ -251,6 +251,7 @@
           Aucun abonnement récent
         </div>
 
+
         <div *ngIf="stats.recentSubscriptions.length > 0" class="space-y-3">
           <div *ngFor="let sub of stats.recentSubscriptions"
             class="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
@@ -268,7 +269,7 @@
               <span class="inline-block px-3 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full mb-1">
                 {{ getSubscriptionLabel(sub.subscriptionType) }}
               </span>
-              <p class="text-xs text-gray-500">{{ formatDate(sub.startDate) }}</p>
+              <p class="text-xs text-gray-500">Date Expiration : {{ formatDate(sub.endDate) }}</p>
             </div>
           </div>
         </div>

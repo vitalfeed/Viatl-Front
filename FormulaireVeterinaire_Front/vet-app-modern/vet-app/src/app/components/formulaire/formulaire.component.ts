@@ -23,7 +23,7 @@ export class FormulaireComponent implements OnInit {
   successMessage = '';
 
   // Configuration pour ngx-intl-tel-input
-  separateDialCode = false;
+  separateDialCode = true;
   SearchCountryField = SearchCountryField;
   CountryISO = CountryISO;
   PhoneNumberFormat = PhoneNumberFormat;
@@ -68,11 +68,11 @@ export class FormulaireComponent implements OnInit {
     }
 
     this.loading = true;
-    
+
     // Préparation des données pour l'API selon le format requis
     const telephoneValue = this.demandeForm.value.telephone;
     let telephone = '';
-    
+
     // Vérifier si la valeur du téléphone est un objet (cas de ngx-intl-tel-input)
     if (telephoneValue && typeof telephoneValue === 'object') {
       // Utiliser le numéro international sans le +
@@ -80,7 +80,7 @@ export class FormulaireComponent implements OnInit {
     } else {
       telephone = telephoneValue || '';
     }
-    
+
     const userData = {
       nom: this.demandeForm.value.nom,
       prenom: this.demandeForm.value.prenom,
@@ -94,10 +94,10 @@ export class FormulaireComponent implements OnInit {
       next: (response) => {
         this.loading = false;
         this.successMessage = 'Inscription réussie ! Vous serez contacté pour finaliser votre compte.';
-        
+
         // Stockage des données dans le localStorage pour la page de confirmation
         localStorage.setItem('demande', JSON.stringify(userData));
-        
+
         // Redirection après 2 secondes
         setTimeout(() => {
           this.router.navigate(['/confirmation']);
@@ -106,13 +106,13 @@ export class FormulaireComponent implements OnInit {
       error: (error: any) => {
         this.loading = false;
         console.error('Registration error:', error);
-        
+
         // Handle different error scenarios with user-friendly messages
         if (error.error && typeof error.error === 'string') {
           const errorText = error.error.toLowerCase();
-          
+
           if (errorText.includes('matricule')) {
-            this.error = 'Le numéro matricule que vous avez saisi n\'existe pas dans notre service.';
+            this.error = 'Le numéro matricule que vous avez saisi n\'existe pas dans notre service. Veuillez Contacter Service Commercial';
           } else if (errorText.includes('email')) {
             this.error = 'Cette adresse email est déjà utilisée.';
           } else {

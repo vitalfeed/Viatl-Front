@@ -23,12 +23,12 @@ export class AppComponent implements OnInit {
   cartItemsCount: number = 0;
   selectedProductFilter: string = 'tous';
   selectedSubType: string = '';
-  sidebarOpen: boolean = false;
-  produitsSidebarOpen: boolean = false;
+  sidebarOpen: boolean = true;
+  produitsSidebarOpen: boolean = true;
   showProfileDropdown: boolean = false;
   mobileMenuOpen: boolean = false;
   userFullName: string = '';
-  
+
   // Password modal
   showPasswordModal: boolean = false;
   passwordForm: FormGroup;
@@ -41,7 +41,7 @@ export class AppComponent implements OnInit {
   passwordStrength: number = 0;
   passwordStrengthText: string = '';
   passwordStrengthColor: string = '';
-  
+
   // Available product types based on actual products
   availableProductTypes = [
     { key: 'aliment', label: 'Aliment', animals: ['chien', 'chat'] },
@@ -50,13 +50,16 @@ export class AppComponent implements OnInit {
   ];
 
   constructor(
-    private router: Router, 
+    private router: Router,
     private cartService: CartService,
     private authMonitor: AuthMonitorService,
     private authService: AuthService,
     private http: HttpClient,
     private formBuilder: FormBuilder
   ) {
+    // Initialize current route
+    this.currentRoute = this.router.url;
+    
     // Initialize password form
     this.passwordForm = this.formBuilder.group({
       currentPassword: ['', [Validators.required]],
@@ -67,14 +70,37 @@ export class AppComponent implements OnInit {
     this.router.events.pipe(
       filter((event): event is NavigationEnd => event instanceof NavigationEnd)
     ).subscribe((event) => {
+      const previousRoute = this.currentRoute;
       this.currentRoute = event.urlAfterRedirects;
-      // Reset filters when route changes
-      this.selectedProductFilter = 'tous';
-      this.selectedSubType = '';
       
+      // Parse query parameters from URL
+      const urlParams = new URLSearchParams(this.currentRoute.split('?')[1] || '');
+      const animalParam = urlParams.get('animal');
+      const typeParam = urlParams.get('type');
+      
+      // Update filters based on URL parameters
+      if (animalParam) {
+        this.selectedProductFilter = animalParam;
+      }
+      if (typeParam) {
+        this.selectedSubType = typeParam;
+      }
+      
+      // Only reset filters when navigating away from espace-proprietaire or produits-veterinaire
+      const isProductPage = this.currentRoute.includes('/espace-proprietaire') || 
+                           this.currentRoute.includes('/produits-veterinaire');
+      const wasProductPage = previousRoute.includes('/espace-proprietaire') || 
+                            previousRoute.includes('/produits-veterinaire');
+      
+      // Reset filters only when leaving product pages
+      if (!isProductPage && wasProductPage) {
+        this.selectedProductFilter = 'tous';
+        this.selectedSubType = '';
+      }
+
       // Close mobile menu on navigation
       this.mobileMenuOpen = false;
-      
+
       // Refresh user full name from localStorage on route change
       const storedName = localStorage.getItem('userFullName');
       if (storedName) {
@@ -91,7 +117,7 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     // Start monitoring authentication state on route changes
     this.authMonitor.startMonitoring();
-    
+
     // Load user name from localStorage
     const storedName = localStorage.getItem('userFullName');
     if (storedName) {
@@ -130,12 +156,26 @@ export class AppComponent implements OnInit {
     return this.currentRoute.includes('/formulaireUser');
   }
 
+  get isEspaceCommercial(): boolean {
+    return this.currentRoute.includes('/espace-commercial') || 
+           this.currentRoute.includes('espace-commercial/commande') || 
+           this.currentRoute.includes('espace-commercial/panier');
+  }
+
   get navbarTitle(): string {
     return 'VITALFEED';
   }
 
   get showCart(): boolean {
     return this.isEspaceProprietaire || this.isProduitsVeterinaire;
+  }
+
+  get shouldShowNavbar(): boolean {
+    return !this.isAdmin && !this.isEspaceVeterinaire && !this.isFormulaireVet && !this.isProduitsVeterinaire && !this.isEspaceCommercial;
+  }
+
+  get isOuTrouverNosProduits(): boolean {
+    return this.currentRoute.includes('/ou-trouver-nos-produits');
   }
 
   toggleSidebar() {
@@ -165,16 +205,16 @@ export class AppComponent implements OnInit {
   selectProductFilter(filter: string) {
     this.selectedProductFilter = filter;
     this.selectedSubType = '';
-    
+
     // Determine which page to navigate to based on current route
     const targetRoute = this.isEspaceProprietaire ? '/espace-proprietaire' : '/produits-veterinaire';
-    
+
     if (filter === 'tous') {
       // Show all products from both animals and all types
       this.router.navigate([targetRoute], { queryParams: {} });
     } else {
       // Navigate with animal filter only
-      this.router.navigate([targetRoute], { 
+      this.router.navigate([targetRoute], {
         queryParams: { animal: filter }
       });
     }
@@ -183,7 +223,7 @@ export class AppComponent implements OnInit {
   selectSubType(type: string) {
     // Determine which page to navigate to based on current route
     const targetRoute = this.isEspaceProprietaire ? '/espace-proprietaire' : '/produits-veterinaire';
-    
+
     // Toggle selection - if already selected, deselect it
     if (this.selectedSubType === type) {
       this.selectedSubType = '';
@@ -191,24 +231,24 @@ export class AppComponent implements OnInit {
       if (this.selectedProductFilter === 'tous') {
         this.router.navigate([targetRoute], { queryParams: {} });
       } else {
-        this.router.navigate([targetRoute], { 
+        this.router.navigate([targetRoute], {
           queryParams: { animal: this.selectedProductFilter }
         });
       }
     } else {
       this.selectedSubType = type;
-      
+
       if (this.selectedProductFilter === 'tous') {
         // If "tous" is selected, filter by product type only (all animals)
-        this.router.navigate([targetRoute], { 
+        this.router.navigate([targetRoute], {
           queryParams: { type: type }
         });
       } else {
         // Filter by both animal and product type
-        this.router.navigate([targetRoute], { 
-          queryParams: { 
-            animal: this.selectedProductFilter, 
-            type: type 
+        this.router.navigate([targetRoute], {
+          queryParams: {
+            animal: this.selectedProductFilter,
+            type: type
           }
         });
       }
@@ -321,9 +361,9 @@ export class AppComponent implements OnInit {
       currentPassword: this.passwordForm.value.currentPassword,
       newPassword: this.passwordForm.value.newPassword
     };
-    this.http.post(`${environment.apiUrl}/reset-password`, body, { 
-      withCredentials: true, 
-      responseType: 'text' 
+    this.http.post(`${environment.apiUrl}/reset-password`, body, {
+      withCredentials: true,
+      responseType: 'text'
     }).subscribe({
       next: () => {
         this.passwordLoading = false;
@@ -352,7 +392,7 @@ export class AppComponent implements OnInit {
       next: () => {
         localStorage.clear();
         if ('caches' in window) {
-          caches.keys().then(function(names) {
+          caches.keys().then(function (names) {
             for (let name of names) caches.delete(name);
           });
         }

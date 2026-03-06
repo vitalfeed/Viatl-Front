@@ -182,11 +182,263 @@
   }
 }
 
+// Interactive "chasing" image effect
+.hero-image-wrapper-interactive {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  cursor: pointer;
+  overflow: visible;
+  padding: 40px; // Extra space for movement
+  margin: -40px; // Compensate padding
+  
+  .hero-image-chase {
+    width: 100%;
+    height: auto;
+    border-radius: 2rem;
+    box-shadow: 0 20px 60px rgba(59, 130, 246, 0.3);
+    transition: box-shadow 0.3s ease;
+    will-change: transform;
+    transform-origin: center center;
+    
+    &:hover {
+      box-shadow: 0 30px 80px rgba(59, 130, 246, 0.5), 0 0 40px rgba(59, 130, 246, 0.2);
+    }
+  }
+  
+  // Add a subtle glow effect when active
+  &:hover .hero-image-chase {
+    filter: brightness(1.05);
+  }
+}
+
 @keyframes float {
   0%, 100% {
     transform: translateY(0px);
   }
   50% {
     transform: translateY(-20px);
+  }
+}
+
+
+// ========== MODERN HERO ANIMATIONS ==========
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes float-delayed {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: float-delayed 8s ease-in-out infinite;
+  animation-delay: 1s;
+}
+
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 0.1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.15;
+    transform: scale(1.05);
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 10s ease-in-out infinite;
+}
+
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in-left {
+  animation: slide-in-left 0.8s ease-out;
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.8s ease-out;
+}
+
+@keyframes gradient {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient 3s ease infinite;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  80% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.animate-scroll {
+  animation: scroll 2s ease-in-out infinite;
+}
+
+// Grid Pattern Background
+.bg-grid-pattern {
+  background-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+// Enhanced Shadow
+.shadow-3xl {
+  box-shadow: 0 35px 60px -15px rgba(0, 0, 0, 0.3);
+}
+
+// Backdrop Blur Support
+.backdrop-blur-sm {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+
+// ========== FIXED-WIDTH COMPROMISE LAYOUT ==========
+// Keeps layout stable on zoom while maintaining mobile responsiveness
+
+// Main container with fixed max-width
+.fixed-layout-container {
+  max-width: 1900px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 2rem;
+  
+  // On mobile, use full width
+  @media (max-width: 768px) {
+    max-width: 100%;
+    padding: 0 1rem;
+  }
+}
+
+// Fixed spacing for sections
+.section-spacing {
+  padding-top: 50px;
+  padding-bottom: 80px;
+  
+  @media (max-width: 768px) {
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+}
+
+// Fixed grid for nutrition cards
+.nutrition-grid-fixed {
+  display: grid;
+  grid-template-columns: repeat(4, 300px);
+  gap: 24px;
+  justify-content: center;
+  
+  @media (max-width: 1400px) {
+    grid-template-columns: repeat(2, 300px);
+  }
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+}
+
+// Fixed sidebar width
+.sidebar-fixed {
+  width: 260px;
+  flex-shrink: 0;
+  
+  @media (max-width: 1024px) {
+    width: 100%;
+  }
+}
+
+// Fixed content area
+.content-fixed {
+  flex: 1;
+  max-width: calc(1600px - 260px - 32px); // container - sidebar - gap
+  
+  @media (max-width: 1400px) {
+    width: 100%;
+  }
+}
+
+// Prevent text from scaling too much
+.text-fixed {
+  font-size: 16px !important;
+  line-height: 1.5 !important;
+}
+
+.heading-fixed {
+  font-size: 32px !important;
+  line-height: 1.2 !important;
+  
+  @media (max-width: 768px) {
+    font-size: 24px !important;
+  }
+}
+
+// Fixed button sizes
+.button-fixed {
+  padding: 12px 24px !important;
+  font-size: 16px !important;
+  
+  @media (max-width: 768px) {
+    padding: 10px 20px !important;
+    font-size: 14px !important;
   }
 }

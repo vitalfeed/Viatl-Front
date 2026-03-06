@@ -10,6 +10,15 @@
 }
 
 :host ::ng-deep {
+
+  /* Override the path variables to use our local assets */
+  .iti {
+    --iti-path-flags-1x: url("/assets/img/flags.webp");
+    --iti-path-flags-2x: url("/assets/img/flags@2x.webp");
+    --iti-path-globe-1x: url("/assets/img/globe.webp");
+    --iti-path-globe-2x: url("/assets/img/globe@2x.webp");
+  }
+
   .custom-tel-input {
     width: 100%;
     padding-right: 0;
@@ -49,9 +58,19 @@
     border-right: none !important;
   }
 
+  /* Style pour le code pays affiché (ex: +216) */
+  .iti__selected-dial-code {
+    color: #374151 !important;
+    /* Dark gray color */
+    font-weight: 500 !important;
+    margin-left: 6px !important;
+    font-size: 14px !important;
+  }
+
   /* Styles pour le champ input */
   .iti input {
-    padding-left: 88px !important; /* Ajustez selon la largeur du code pays */
+    padding-left: 88px !important;
+    /* Ajustez selon la largeur du code pays */
     height: 48px !important;
     line-height: 48px !important;
     border-radius: 8px !important;
@@ -100,10 +119,10 @@ form {
     border-radius: 8px;
     transition: all 0.3s ease;
     height: 48px;
-    
+
     &:focus {
       box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
       border-color: #3b82f6;
     }
   }
-} 
+}

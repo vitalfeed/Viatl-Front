@@ -1,9 +1,5 @@
 {
-  "root": "vet-app",
-  "buildCommand": "npm install --legacy-peer-deps && npm run vercel-build",
-  "outputDirectory": "dist/vet-app",
-  "framework": null,
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
-  ]
+  "buildCommand": "npm run vercel-build",
+  "outputDirectory": "dist/vet-app-root/browser",
+  "framework": null
 }

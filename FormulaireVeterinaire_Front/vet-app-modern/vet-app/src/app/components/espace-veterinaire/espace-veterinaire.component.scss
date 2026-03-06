@@ -2,17 +2,30 @@
   display: block;
   min-height: 100vh;
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Geometria', 'Sans-serif', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+* {
+  font-family: 'Geometria', 'Sans-serif', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1rem;
-  
+
   @media (min-width: 768px) {
     padding: 0 2rem;
   }
+}
+
+// Animation delay utilities for V4 hero blob animations
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
 }
 
 // ========== HERO SECTION ==========
@@ -91,7 +104,8 @@
     margin-bottom: 3rem;
     flex-wrap: wrap;
 
-    .btn-primary, .btn-secondary {
+    .btn-primary,
+    .btn-secondary {
       padding: 1rem 2rem;
       border-radius: 0.75rem;
       font-weight: 700;
@@ -686,7 +700,7 @@
 
   @media (max-width: 768px) {
     padding: 1rem 1.5rem;
-    
+
     .header-content {
       .video-icon {
         width: 2.5rem;
@@ -789,6 +803,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -799,6 +814,7 @@
     opacity: 0;
     transform: scale(0.95) translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
@@ -808,11 +824,11 @@
 // Product carousel styles
 .product-card {
   transition: all 0.3s ease;
-  
+
   &:hover {
     transform: translateY(-5px);
   }
-  
+
   &:active {
     animation: cardPulse 0.4s ease;
   }
@@ -822,9 +838,11 @@
   0% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(0.98);
   }
+
   100% {
     transform: scale(1);
   }
@@ -920,10 +938,76 @@
 }
 
 @keyframes bounce {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-10px);
+  }
+}
+
+
+// Fixed-width compromise layout (prevents shifting on zoom)
+.fixed-layout-container {
+  max-width: 1600px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 2rem;
+  
+  // On mobile, use full width
+  @media (max-width: 768px) {
+    max-width: 100%;
+    padding: 0 1rem;
+  }
+}
+
+// Fixed spacing for sections
+.section-spacing {
+  padding-top: 60px;
+  padding-bottom: 60px;
+  
+  @media (max-width: 768px) {
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+}
+
+
+// Fixed hero section layout (prevents shifting on zoom)
+.hero-fixed {
+  max-width: 1600px;
+  margin: 0 auto;
+  
+  @media (max-width: 768px) {
+    max-width: 100%;
+  }
+}
+
+.hero-left-fixed {
+  width: 800px;
+  flex-shrink: 0;
+  
+  @media (max-width: 1024px) {
+    width: 50%;
+  }
+  
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+}
+
+.hero-right-fixed {
+  width: 800px;
+  flex-shrink: 0;
+  
+  @media (max-width: 1024px) {
+    width: 50%;
+  }
+  
+  @media (max-width: 768px) {
+    width: 100%;
   }
 }

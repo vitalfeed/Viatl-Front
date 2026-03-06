@@ -18,9 +18,9 @@ interface DashboardStats {
   totalProducts: number;
   productsByCategory: { category: string; count: number; }[];
 
-  // Boutiques
-  totalBoutiques: number;
-  featuredBoutiques: number;
+  // Cabinets
+  totalCabinets: number;
+  featuredCabinets: number;
 
   // Veterinaires
   totalVeterinaires: number;
@@ -44,8 +44,8 @@ export class AdminDashboardComponent implements OnInit {
     expiredSubscriptions: 0,
     totalProducts: 0,
     productsByCategory: [],
-    totalBoutiques: 0,
-    featuredBoutiques: 0,
+    totalCabinets: 0,
+    featuredCabinets: 0,
     totalVeterinaires: 0,
     recentSubscriptions: []
   };
@@ -101,9 +101,9 @@ export class AdminDashboardComponent implements OnInit {
           return of([]);
         })
       ),
-      boutiques: this.http.get<any[]>(`${environment.apiUrl}/cabinets/all`, this.getRequestOptions()).pipe(
+      cabinets: this.http.get<any[]>(`${environment.apiUrl}/cabinets/all`, this.getRequestOptions()).pipe(
         catchError(err => {
-          console.error('Error loading boutiques:', err);
+          console.error('Error loading cabinets:', err);
           return of([]);
         })
       ),
@@ -138,7 +138,10 @@ export class AdminDashboardComponent implements OnInit {
     // Subscriptions statistics
     const subscriptions = data.subscriptions || [];
     this.stats.activeSubscriptions = subscriptions.filter((s: any) => s.user?.status === 'ACTIVE').length;
+
     this.stats.expiredSubscriptions = subscriptions.filter((s: any) => s.user?.status === 'EXPIRED').length;
+
+
 
     // Recent subscriptions (last 5)
     this.stats.recentSubscriptions = subscriptions
@@ -175,10 +178,10 @@ export class AdminDashboardComponent implements OnInit {
       color: item.category === 'CHIEN' ? '#3b82f6' : '#ef4444'
     }));
 
-    // Boutiques statistics
-    const boutiques = data.boutiques || [];
-    this.stats.totalBoutiques = boutiques.filter((b: any) => b.type === 'BOUTIQUE').length;
-    this.stats.featuredBoutiques = boutiques.filter((b: any) => b.featured === true).length;
+    // Cabinets statistics
+    const cabinets = data.cabinets || [];
+    this.stats.totalCabinets = cabinets.filter((c: any) => c.type === 'BOUTIQUE').length;
+    this.stats.featuredCabinets = cabinets.filter((c: any) => c.featured === true).length;
 
     // Veterinaires statistics
     this.stats.totalVeterinaires = (data.veterinaires || []).length;

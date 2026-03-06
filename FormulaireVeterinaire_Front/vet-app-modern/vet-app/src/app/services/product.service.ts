@@ -42,7 +42,7 @@ export class ProductService {
    * Update a product
    */
   updateProduct(id: number, product: Partial<Product>): Observable<Product> {
-    return this.http.put<Product>(`${this.apiUrl}/update/${id}`, product, this.getRequestOptions()).pipe(
+    return this.http.put<Product>(`${this.apiUrl}/update/${id}/full`, product, this.getRequestOptions()).pipe(
       catchError(this.handleUpdateError)
     );
   }
@@ -59,7 +59,7 @@ export class ProductService {
   /**
    * Add a new product
    */
-  addProduct(product: Omit<Product, 'id'>): Observable<Product> {
+  addProduct(product: Partial<Omit<Product, 'id'>>): Observable<Product> {
     return this.http.post<Product>(`${this.apiUrl}/add`, product, this.getRequestOptions()).pipe(
       catchError(this.handleAddError)
     );
@@ -124,6 +124,33 @@ export class ProductService {
       category: product.category,
       subCategory: product.subCategory
     }));
+  }
+
+  /**
+   * Get the first variant (by minimum ID) from a product
+   */
+  getFirstVariant(product: Product): any {
+    if (!product.variants || product.variants.length === 0) {
+      return null;
+    }
+    // Sort variants by ID and return the first one (minimum ID)
+    return [...product.variants].sort((a, b) => a.id - b.id)[0];
+  }
+
+  /**
+   * Get price from the first variant (minimum ID)
+   */
+  getVariantPrice(product: Product): number {
+    const firstVariant = this.getFirstVariant(product);
+    return firstVariant ? firstVariant.price : (product.price || 0);
+  }
+
+  /**
+   * Get packaging from the first variant (minimum ID)
+   */
+  getVariantPackaging(product: Product): string {
+    const firstVariant = this.getFirstVariant(product);
+    return firstVariant ? firstVariant.packaging : '';
   }
 
   /**

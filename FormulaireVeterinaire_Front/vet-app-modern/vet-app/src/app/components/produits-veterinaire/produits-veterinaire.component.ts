@@ -1,8 +1,8 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
 import { CartService, CartItem } from '../../services/cart.service';
 import { ProductService } from '../../services/product.service';
 import { Product } from '../../models/product.model';
@@ -19,6 +19,7 @@ import { LazyLoadImageDirective } from '../../directives/lazy-load-image.directi
     RouterModule,
     HttpClientModule,
     ReactiveFormsModule,
+    FormsModule,
     InfiniteScrollDirective,
     ProductSkeletonComponent,
     LazyLoadImageDirective
@@ -28,9 +29,8 @@ import { LazyLoadImageDirective } from '../../directives/lazy-load-image.directi
 })
 export class ProduitsVeterinaireComponent implements OnInit {
   allProducts: Product[] = [];
-  displayedProducts: Product[] = []; // Products currently shown
+  displayedProducts: Product[] = [];
   isLoading: boolean = true;
-  isLoadingMore: boolean = false; // Loading more products
   errorMessage: string = '';
 
   categories = [
@@ -46,7 +46,8 @@ export class ProduitsVeterinaireComponent implements OnInit {
 
   selectedCategory: string | null = null;
   selectedSousCategory: string | null = null;
-  menuOpen = false;
+  selectedSubSubCategory: string | null = null;
+
   cartOpen = false;
   showAllProducts = false;
   cartItems: CartItem[] = [];
@@ -55,8 +56,7 @@ export class ProduitsVeterinaireComponent implements OnInit {
 
   // Infinite scroll properties
   currentPage = 1;
-  itemsPerPage = 12; // Load 12 items at a time
-  hasMoreProducts = true;
+  itemsPerPage = 15;
 
   Math = Math;
   highlightedProductId: number | null = null;
@@ -82,7 +82,8 @@ export class ProduitsVeterinaireComponent implements OnInit {
     private route: ActivatedRoute,
     private productService: ProductService,
     private http: HttpClient,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private cdr: ChangeDetectorRef
   ) {
     this.passwordForm = this.formBuilder.group({
       currentPassword: ['', [Validators.required]],
@@ -166,6 +167,8 @@ export class ProduitsVeterinaireComponent implements OnInit {
     this.showConfirmPassword = !this.showConfirmPassword;
   }
 
+  
+
   ngOnInit() {
     this.checkAuthentication();
     this.loadUserData();
@@ -176,7 +179,11 @@ export class ProduitsVeterinaireComponent implements OnInit {
       this.cartTotal = items.reduce((total, item) => total + (item.price * item.quantity), 0);
     });
     this.route.queryParams.subscribe(params => {
-      this.selectedCategory = params['animal'] || null;
+      if (params['animal']) {
+        this.selectedCategory = this.capitalizeFirst(params['animal']);
+      } else {
+        this.selectedCategory = null;
+      }
       this.selectedSousCategory = params['type'] || null;
       if (params['highlight']) {
         this.highlightedProductId = +params['highlight'];
@@ -184,8 +191,14 @@ export class ProduitsVeterinaireComponent implements OnInit {
           this.highlightedProductId = null;
         }, 3000);
       }
-      this.currentPage = 1;
+
+      // Refresh filtered view when params change
+      this.resetDisplayedProducts();
     });
+  }
+
+  private capitalizeFirst(str: string): string {
+    return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
   checkAuthentication(): void {
@@ -237,10 +250,19 @@ export class ProduitsVeterinaireComponent implements OnInit {
     this.errorMessage = '';
     this.productService.getAllProducts().subscribe({
       next: (products) => {
-        this.allProducts = products;
+        // Set price from first variant (minimum ID) for each product
+        this.allProducts = products.map(product => {
+          const p = product as any;
+          p.price = this.productService.getVariantPrice(product);
+          // Set the selected variant ID to the first variant
+          const firstVariant = this.productService.getFirstVariant(product);
+          if (firstVariant) {
+            p.selectedVariantId = firstVariant.id;
+          }
+          return p;
+        });
         this.isLoading = false;
-        // Load first batch of products
-        this.loadMoreProducts();
+        this.updateDisplayedProducts();
       },
       error: (error) => {
         console.error('Error loading products:', error);
@@ -250,47 +272,81 @@ export class ProduitsVeterinaireComponent implements OnInit {
     });
   }
 
+  onProductVariantChange(product: any): void {
+    // Find the selected variant and update the product price
+    if (product.variants && product.selectedVariantId) {
+      // Convert to number in case it's a string from the select element
+      const selectedId = typeof product.selectedVariantId === 'string' 
+        ? parseInt(product.selectedVariantId, 10) 
+        : product.selectedVariantId;
+      
+      const selectedVariant = product.variants.find((v: any) => v.id === selectedId);
+      if (selectedVariant) {
+        product.price = selectedVariant.price;
+        console.log('Variant changed for product', product.id, ':', selectedVariant, 'New price:', product.price);
+        // Manually trigger change detection to ensure UI updates
+        this.cdr.detectChanges();
+      } else {
+        console.warn('Selected variant not found:', selectedId, 'Available variants:', product.variants);
+      }
+    }
+  }
+
+
   /**
    * Load more products for infinite scroll
    */
-  loadMoreProducts(): void {
-    if (this.isLoadingMore || !this.hasMoreProducts) {
-      return;
-    }
-
-    this.isLoadingMore = true;
-
-    // Simulate async loading with setTimeout for smooth UX
-    setTimeout(() => {
-      const filtered = this.getFilteredProducts();
-      const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-      const endIndex = startIndex + this.itemsPerPage;
-      const newProducts = filtered.slice(startIndex, endIndex);
-
-      if (newProducts.length > 0) {
-        this.displayedProducts = [...this.displayedProducts, ...newProducts];
-        this.currentPage++;
-      }
-
-      // Check if there are more products to load
-      this.hasMoreProducts = endIndex < filtered.length;
-      this.isLoadingMore = false;
-    }, 300); // Small delay for smooth loading animation
+  getTotalPages(): number {
+    return Math.ceil(this.getFilteredProducts().length / this.itemsPerPage);
   }
+
+    getPageNumbers(): number[] {
+    const totalPages = this.getTotalPages();
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.getTotalPages()) {
+      this.currentPage = page;
+      this.updateDisplayedProducts();
+      this.scrollToProducts();
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.getTotalPages()) {
+      this.currentPage++;
+      this.updateDisplayedProducts();
+      this.scrollToProducts();
+    }
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updateDisplayedProducts();
+      this.scrollToProducts();
+    }
+  }
+
+  updateDisplayedProducts(): void {
+    const filtered = this.getFilteredProducts();
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.displayedProducts = filtered.slice(startIndex, endIndex);
+  }
+
 
   /**
    * Reset displayed products when filters change
    */
-  resetDisplayedProducts(): void {
-    this.displayedProducts = [];
+ resetDisplayedProducts(): void {
     this.currentPage = 1;
-    this.hasMoreProducts = true;
-    this.loadMoreProducts();
+    this.updateDisplayedProducts();
   }
 
-  toggleMenu() {
-    this.menuOpen = !this.menuOpen;
-  }
+
+
 
   toggleCart() {
     this.cartOpen = !this.cartOpen;
@@ -298,24 +354,41 @@ export class ProduitsVeterinaireComponent implements OnInit {
 
   toggleShowAllProducts() {
     this.showAllProducts = !this.showAllProducts;
-    this.menuOpen = false;
+
   }
 
   selectCategory(cat: string) {
-    this.selectedCategory = this.selectedCategory === cat ? null : cat;
-    this.selectedSousCategory = null;
-    this.resetDisplayedProducts(); // Reset when category changes
+    // If clicking the same category, keep it selected (don't toggle off)
+    // If clicking a different category, switch to it
+    if (this.selectedCategory !== cat) {
+      this.selectedCategory = cat;
+      this.selectedSousCategory = null;
+      this.selectedSubSubCategory = null;
+      this.resetDisplayedProducts(); // Reset when category changes
+    }
   }
 
   selectSousCategory(sub: string) {
-    this.selectedSousCategory = sub;
+    // Toggle behavior for subcategory
+    this.selectedSousCategory = this.selectedSousCategory === sub ? null : sub;
+    this.selectedSubSubCategory = null;
     this.showAllProducts = true;
-    this.menuOpen = false;
+
     this.resetDisplayedProducts(); // Reset when subcategory changes
   }
 
+  selectSubSubCategory(subSub: string) {
+    this.selectedSubSubCategory = this.selectedSubSubCategory === subSub ? null : subSub;
+    this.resetDisplayedProducts();
+  }
+
+  shouldShowSubSubCategoryFilter(): boolean {
+    const normalizedSousCategory = this.selectedSousCategory?.toLowerCase();
+    return this.selectedCategory !== null && normalizedSousCategory === 'aliment';
+  }
+
   getFilteredProducts(): Product[] {
-    if (!this.selectedCategory && !this.selectedSousCategory) {
+    if (!this.selectedCategory && !this.selectedSousCategory && !this.selectedSubSubCategory) {
       return this.allProducts;
     }
     return this.allProducts.filter(product => {
@@ -327,16 +400,27 @@ export class ProduitsVeterinaireComponent implements OnInit {
       };
       const productCategory = normalizeString(product.category);
       const productSubCategory = normalizeString(product.subCategory);
+      const productSubSubCategory = product.subSubCategory ? normalizeString(product.subSubCategory) : null;
       const filterCategory = this.selectedCategory ? normalizeString(this.selectedCategory) : null;
       const filterSubCategory = this.selectedSousCategory ? normalizeString(this.selectedSousCategory) : null;
-      if (!filterCategory && filterSubCategory) {
+      const filterSubSubCategory = this.selectedSubSubCategory ? normalizeString(this.selectedSubSubCategory) : null;
+      
+      if (!filterCategory && filterSubCategory && !filterSubSubCategory) {
         return productSubCategory === filterSubCategory;
       }
-      if (filterCategory && !filterSubCategory) {
+      if (filterCategory && !filterSubCategory && !filterSubSubCategory) {
         return productCategory === filterCategory;
       }
-      if (filterCategory && filterSubCategory) {
+      if (filterCategory && filterSubCategory && !filterSubSubCategory) {
         return productCategory === filterCategory && productSubCategory === filterSubCategory;
+      }
+      if (filterCategory && filterSubCategory && filterSubSubCategory) {
+        return productCategory === filterCategory && 
+               productSubCategory === filterSubCategory && 
+               productSubSubCategory === filterSubSubCategory;
+      }
+      if (!filterCategory && !filterSubCategory && filterSubSubCategory) {
+        return productSubSubCategory === filterSubSubCategory;
       }
       return true;
     });
@@ -359,7 +443,14 @@ export class ProduitsVeterinaireComponent implements OnInit {
   }
 
   addToCart(product: Product) {
-    this.cartService.addToCart(product);
+    // Create a copy of the product with the current selected variant's price
+    const productToAdd = {
+      ...product,
+      price: product.price // This already has the updated price from onProductVariantChange
+    };
+    
+    console.log('Adding to cart:', productToAdd.name, 'Price:', productToAdd.price, 'Variant ID:', productToAdd.selectedVariantId);
+    this.cartService.addToCart(productToAdd);
   }
 
   viewProductDetails(product: Product) {
@@ -398,11 +489,7 @@ export class ProduitsVeterinaireComponent implements OnInit {
   /**
    * Handle infinite scroll event
    */
-  onScroll(): void {
-    if (!this.isLoading && !this.isLoadingMore && this.hasMoreProducts) {
-      this.loadMoreProducts();
-    }
-  }
+
 
   toggleProfileDropdown(): void {
     this.showProfileDropdown = !this.showProfileDropdown;
@@ -502,5 +589,32 @@ export class ProduitsVeterinaireComponent implements OnInit {
       // SVG with "Image non disponible" text
       img.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"%3E%3Crect fill="%23f3f4f6" width="200" height="200"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="14" fill="%239ca3af"%3EImage non disponible%3C/text%3E%3C/svg%3E';
     }
+  }
+  scrollToProducts(): void {
+    const productsElement = document.querySelector('.products-header');
+    if (productsElement) {
+      productsElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  getProductPrice(product: Product): number {
+    // Get price from first variant (minimum ID) using the service method
+    return this.productService.getVariantPrice(product);
+  }
+
+  getProductPackaging(product: Product): string {
+    // Get packaging from first variant (minimum ID) using the service method
+    return this.productService.getVariantPackaging(product);
+  }
+
+  getSelectedVariantPackaging(product: any): string {
+    // Get packaging from the currently selected variant
+    if (product.variants && product.selectedVariantId) {
+      const selectedVariant = product.variants.find((v: any) => v.id === product.selectedVariantId);
+      if (selectedVariant) {
+        return selectedVariant.packaging;
+      }
+    }
+    return this.getProductPackaging(product);
   }
 }

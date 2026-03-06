@@ -1,172 +1,368 @@
-<!-- Navbar -->
-<header class="bg-white sticky top-0 z-50 border-b border-gray-200">
-  <div class="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex justify-between items-center py-4">
-      <div class="flex items-center">
-        <div class="w-10 h-10 bg-vet-blue/10 rounded-full flex items-center justify-center mr-3">
-          <svg class="w-6 h-6 text-vet-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
-            </path>
-          </svg>
-        </div>
-        <span class="text-xl font-bold text-vet-blue">VITALFEED</span>
-      </div>
-      <nav class="flex items-center space-x-4">
-        <!-- Cart Button -->
-        <button routerLink="/produits-veterinaire"
-          class="relative flex items-center justify-center w-10 h-10 bg-vet-blue hover:bg-blue-600 text-white rounded-lg transition-all duration-300 transform hover:scale-105">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.5 5M7 13v6a2 2 0 002 2h6a2 2 0 002-2v-6m-9 0h9"></path>
-          </svg>
-          <span *ngIf="cartCount > 0"
-            class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">{{
-            cartCount }}</span>
-        </button>
+<!-- HERO V7: HYBRID (Product-Focused Left + V5 App Right) -->
+<section class="relative w-full min-h-[85vh] flex flex-row overflow-hidden -mt-4">
 
-        <!-- Profile Dropdown -->
-        <div class="profile-dropdown-container relative">
-          <button (click)="toggleProfileDropdown()"
-            class="flex items-center space-x-3 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors duration-200 group">
+  <!-- LEFT: PRODUCTS (Enhanced Dynamic Theme) -->
+  <div
+    class="relative w-1/2 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 flex items-center justify-center p-12 overflow-hidden">
+    <!-- Enhanced Decorative Blobs -->
+    <div
+      class="absolute top-10 right-10 w-64 h-64 bg-gradient-to-br from-green-300/40 to-emerald-300/40 rounded-full blur-3xl animate-blob">
+    </div>
+    <div
+      class="absolute bottom-10 left-10 w-72 h-72 bg-gradient-to-br from-teal-300/40 to-cyan-300/40 rounded-full blur-3xl animate-blob animation-delay-2000">
+    </div>
+    <div
+      class="absolute top-1/2 left-1/2 w-48 h-48 bg-gradient-to-br from-blue-300/30 to-green-300/30 rounded-full blur-3xl animate-blob animation-delay-4000">
+    </div>
+
+    <div class="relative z-10 max-w-xl w-full text-center">
+      <!-- Enhanced Badge with Animation -->
+      <div
+        class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg mb-6 hover:shadow-xl transition-all hover:scale-105 cursor-pointer">
+        <span class="flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-white opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+        </span>
+        <span class="text-xs font-bold whitespace-nowrap">🛒 Centrale d'Achat</span>
+      </div>
+
+      <!-- Enhanced Headline -->
+      <h2 class="text-4xl font-black text-slate-900 leading-tight mb-6">
+        Commandez vos <span
+          class="text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600">produits
+          vétérinaires</span>
+      </h2>
+
+      <!-- Enhanced Description -->
+      <p class="text-lg text-slate-700 leading-relaxed mb-8 font-medium">
+        Nutrition premium, Compléments alimentaires spécifiques, tests de diagnostic rapide fiables .<br />
+        <span class="text-slate-600 font-semibold">✓ Livraison rapide • ✓ Stock permanent • ✓ Prix compétitifs</span>
+      </p>
+
+      <!-- Enhanced Product Showcase Cards with Stagger Animation -->
+      <div class="grid grid-cols-3 gap-3 mb-6">
+        <!-- Card 1: Pharmacie -->
+        <div
+          class="group relative bg-gradient-to-br from-white to-blue-50 backdrop-blur-sm rounded-2xl p-3 shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer border-2 border-blue-200 hover:border-blue-400 overflow-hidden transform hover:-translate-y-3 hover:rotate-2">
+          <div
+            class="absolute inset-0 bg-gradient-to-br from-blue-400/20 to-purple-400/20 opacity-0 group-hover:opacity-100 transition-opacity">
+          </div>
+          <div
+            class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-blue-400/50 to-purple-400/50 rounded-full blur-2xl group-hover:scale-150 transition-transform">
+          </div>
+          <div class="relative text-center">
+            <div class="text-3xl mb-2 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300">💊</div>
+            <div class="text-sm font-semibold text-slate-900 mb-0.5">ALIMENTS</div>
+            <div class="text-[10px] text-blue-700 font-bold opacity-0 group-hover:opacity-100 transition-opacity mt-1">
+              Découvrir →
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Nutrition -->
+        <div
+          class="group relative bg-gradient-to-br from-white to-green-50 backdrop-blur-sm rounded-2xl p-3 shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer border-2 border-green-200 hover:border-green-400 overflow-hidden transform hover:-translate-y-3 hover:rotate-2 animation-delay-200">
+          <div
+            class="absolute inset-0 bg-gradient-to-br from-green-400/20 to-emerald-400/20 opacity-0 group-hover:opacity-100 transition-opacity">
+          </div>
+          <div
+            class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-green-400/50 to-teal-400/50 rounded-full blur-2xl group-hover:scale-150 transition-transform">
+          </div>
+          <div class="relative text-center">
+            <div class="text-3xl mb-2 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300">🍖</div>
+            <div class="text-sm font-semibold text-slate-900 mb-0.5">COMPLEMENT ALIMENTAIRE</div>
+            <div class="text-[10px] text-green-700 font-bold opacity-0 group-hover:opacity-100 transition-opacity mt-1">
+              Découvrir →
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Matériel -->
+        <div
+          class="group relative bg-gradient-to-br from-white to-purple-50 backdrop-blur-sm rounded-2xl p-3 shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer border-2 border-purple-200 hover:border-purple-400 overflow-hidden transform hover:-translate-y-3 hover:rotate-2 animation-delay-400">
+          <div
+            class="absolute inset-0 bg-gradient-to-br from-purple-400/20 to-pink-400/20 opacity-0 group-hover:opacity-100 transition-opacity">
+          </div>
+          <div
+            class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-purple-400/50 to-pink-400/50 rounded-full blur-2xl group-hover:scale-150 transition-transform">
+          </div>
+          <div class="relative text-center">
+            <div class="text-3xl mb-2 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300">🩺</div>
+            <div class="text-sm font-semibold text-slate-900 mb-0.5">SPEED TEST</div>
             <div
-              class="w-10 h-10 bg-gradient-to-br from-vet-blue to-blue-600 rounded-full flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-              </svg>
+              class="text-[10px] text-purple-700 font-bold opacity-0 group-hover:opacity-100 transition-opacity mt-1">
+              Découvrir →
             </div>
-            <div class="hidden md:block text-left">
-              <div class="text-sm font-semibold text-gray-800">
-                <span class="text-vet-blue">Dr.</span> {{ userFullName || 'Vétérinaire' }}
-              </div>
-            </div>
-            <svg class="w-4 h-4 text-gray-600 group-hover:text-vet-blue transition-colors" fill="none"
-              stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </div>
+        </div>
+      </div>
+
+      <!-- Enhanced Primary CTA with Glow Effect -->
+      <button routerLink="/produits-veterinaire"
+        class="group w-full px-8 py-4 rounded-2xl bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 text-white font-black text-lg shadow-2xl hover:shadow-green-500/60 transform hover:-translate-y-2 hover:scale-105 transition-all flex items-center justify-center gap-4 relative overflow-hidden">
+        <div
+          class="absolute inset-0 bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 opacity-0 group-hover:opacity-100 transition-opacity">
+        </div>
+        <div
+          class="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 skew-x-12">
+        </div>
+        <span class="relative z-10 text-xl">Découvrir tous les produits</span>
+        <svg class="relative z-10 w-7 h-7 group-hover:translate-x-3 transition-transform" fill="none"
+          stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </button>
+
+      <!-- Enhanced Trust Indicators -->
+      <div class="mt-8 flex flex justify-center gap-3 ">
+        <div
+          class="flex justify-center gap-3 bg-white/80 backdrop-blur-sm px-4 py-2.5 rounded-full shadow-lg border border-green-200 hover:shadow-xl hover:scale-105 transition-all">
+          <svg class="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+              clip-rule="evenodd" />
+          </svg>
+          <span class="font-black text-green-700 text-lg">+5000</span>
+          <span class="font-semibold text-slate-700">références</span>
+        </div>
+        <div class="flex justify-center">
+        <div class="flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2.5 rounded-full shadow-lg border border-blue-200 hover:shadow-xl hover:scale-105 transition-all">
+          <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+            <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v6.05A2.5 2.5 0 0115.95 16H17a1 1 0 001-1v-5a1 1 0 00-.293-.707l-2-2A1 1 0 0015 7h-1z" />
+          </svg>
+          <span class="font-black text-blue-700 text-lg">Livraison</span>
+          <span class="font-semibold text-slate-700">rapide</span>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: V5 EXACT DESIGN FROM IMAGE -->
+  <div
+    class="relative w-1/2 bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100 flex items-start justify-center pt-20 overflow-hidden">
+    <!-- Decorative Blobs -->
+    <div class="absolute top-20 left-10 w-32 h-32 bg-yellow-300/30 rounded-full blur-3xl animate-blob"></div>
+    <div
+      class="absolute bottom-20 right-20 w-40 h-40 bg-purple-300/30 rounded-full blur-3xl animate-blob animation-delay-2000">
+    </div>
+    <div
+      class="absolute top-1/2 left-1/3 w-24 h-24 bg-blue-300/20 rounded-full blur-2xl animate-blob animation-delay-4000">
+    </div>
+
+    <div class="grid grid-cols-[58%_42%] gap-6 items-start container mx-auto px-8 relative z-10">
+
+      <!-- LEFT: Content -->
+      <div class="space-y-8 text-left -ml-8">
+        <!-- Badge -->
+        <div class="flex justify-center mb-6">
+  <div class="flex w-fit mx-auto items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg hover:shadow-xl transition-all hover:scale-105 cursor-pointer">
+  <span class="flex h-2 w-2">
+    <span class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-white opacity-75"></span>
+    <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+  </span>
+  <span class="text-xs font-bold whitespace-nowrap">💻 Plateforme Vétérinaire Tout-en-Un</span>
+</div>
+</div>
+
+        <!-- Headline -->
+        <h1 class="text-4xl font-black leading-tight text-center">
+        <span class="text-slate-900 whitespace-nowrap">Gérez votre Consultation</span><br />
+        <span class="text-slate-900">comme un </span>
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-600">Spécialiste</span>
+      </h1>
+
+        <!-- Description -->
+        <p class="text-lg text-slate-600 leading-relaxed max-w-xl text-center">
+          Gagnez du temps en définissant quel aliment vous
+          souhaitez recommander dans telle ou telle situation.une
+          fois les caractéristiques de l'animal renseignées, vous
+          pouvez éditer la recommandation en 1 clic sans avoir à
+          rechercher l'aliment. 
+        </p>
+
+        <!-- Feature Pills -->
+        <div class="flex flex-nowrap gap-3">
+          <div
+            class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/60 backdrop-blur-sm border border-slate-200 shadow-sm">
+            <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd" />
+            </svg>
+            <span class="text-sm font-semibold text-slate-700">Gestion simplifiée</span>
+          </div>
+          <div
+            class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/60 backdrop-blur-sm border border-slate-200 shadow-sm">
+            <svg class="w-4 h-4 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd" />
+            </svg>
+            <span class="text-sm font-semibold text-slate-700">Support 24/7</span>
+          </div>
+          <div
+            class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/60 backdrop-blur-sm border border-slate-200 shadow-sm">
+            <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd" />
+            </svg>
+            <span class="text-sm font-semibold text-slate-700">Produits certifiés</span>
+          </div>
+        </div>
+
+        <!-- CTAs -->
+        <div class="flex flex-row gap-4 pt-4">
+          <button (click)="scrollToPricing()"
+            class="group px-8 py-4 rounded-2xl bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold shadow-xl hover:shadow-2xl hover:shadow-purple-500/50 transform hover:-translate-y-1 transition-all flex items-center justify-center gap-2">
+            <span>Commencer Maintenant</span>
+            <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
           </button>
+          <button (click)="openDemoVideo()"
+            class="px-8 py-4 rounded-2xl bg-white/10 backdrop-blur-sm border border-slate-200 text-slate-900 font-semibold hover:bg-white transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2">
+            <svg class="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" />
+            </svg>
+            <span>Voir la démo</span>
+          </button>
+        </div>
 
-          <!-- Dropdown Menu -->
-          <div *ngIf="showProfileDropdown"
-            class="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-            <!-- User Info Header -->
-            <div class="px-4 py-3 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-green-50">
-              <div class="flex items-center space-x-3">
-                <div
-                  class="w-12 h-12 bg-gradient-to-br from-vet-blue to-blue-600 rounded-full flex items-center justify-center shadow-md">
-                  <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                  </svg>
-                </div>
-                <div>
-                  <div class="font-bold text-gray-800">
-                    <span class="text-vet-blue">Dr.</span> {{ userFullName || 'Vétérinaire' }}
+        <!-- Social Proof -->
+
+      </div>
+
+      <!-- RIGHT: Floating UI Mockups -->
+      <div class="relative h-[600px] flex justify-end items-center">
+       <!-- Main Dashboard Card -->
+<div
+  class="w-[360px] transform hover:scale-[1.02] transition-transform duration-500">
+  <div class="relative">
+    <div class="absolute inset-0 bg-gradient-to-r from-purple-400 to-blue-400 rounded-3xl blur-lg opacity-20">
+    </div>
+            <div class="relative bg-white rounded-3xl shadow-2xl p-6 border border-slate-100">
+              <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
+                <div class="flex items-center gap-3 ml-4">
+                  <div
+                    class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white font-bold">
+                    VF</div>
+                  <div>
+                    <div class="text-sm font-bold text-slate-900">VITALFEED Vet</div>
+                    <div class="text-xs text-slate-500">Dashboard Principal</div>
                   </div>
                 </div>
+                <div class="flex gap-1.5">
+                  <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                  <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+                  <div class="w-3 h-3 rounded-full bg-green-400"></div>
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-4 mb-6">
+                <div class="p-4 rounded-2xl bg-gradient-to-br from-purple-50 to-blue-50 border border-purple-100">
+                  <div class="text-2xl font-black text-purple-900 mb-1">24</div>
+                  <div class="text-xs text-purple-700 font-semibold">RDV aujourd'hui</div>
+                </div>
+                <div class="p-4 rounded-2xl bg-gradient-to-br from-green-50 to-teal-50 border border-green-100">
+                  <div class="text-2xl font-black text-green-900 mb-1">€2.4k</div>
+                  <div class="text-xs text-green-700 font-semibold">Revenus du jour</div>
+                </div>
+              </div>
+              <div class="space-y-3">
+                <div
+                  class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 hover:bg-slate-100 transition-colors cursor-pointer">
+                  <div
+                    class="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-pink-400 flex items-center justify-center text-xl">
+                    🐕</div>
+                  <div class="flex-1">
+                    <div class="text-sm font-bold text-slate-900">Max - Labrador</div>
+                    <div class="text-xs text-slate-500">Consultation • 14:00</div>
+                  </div>
+                  <div class="w-2 h-2 rounded-full bg-green-400"></div>
+                </div>
+                <div
+                  class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 hover:bg-slate-100 transition-colors cursor-pointer">
+                  <div
+                    class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-cyan-400 flex items-center justify-center text-xl">
+                    🐈</div>
+                  <div class="flex-1">
+                    <div class="text-sm font-bold text-slate-900">Luna - Persan</div>
+                    <div class="text-xs text-slate-500">Vaccination • 15:30</div>
+                  </div>
+                  <div class="w-2 h-2 rounded-full bg-yellow-400"></div>
+                </div>
               </div>
             </div>
+          </div>
+        </div>
 
-            <button (click)="openPasswordModal()"
-              class="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center space-x-3 transition-colors duration-200">
-              <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z">
-                </path>
-              </svg>
-              <span class="text-gray-700">Changer mot de passe</span>
-            </button>
-            <div class="border-t border-gray-200 my-2"></div>
-            <button (click)="logout()"
-              class="w-full text-left px-4 py-2 hover:bg-red-50 flex items-center space-x-3 transition-colors duration-200">
-              <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-              </svg>
-              <span class="text-red-600 font-semibold">Déconnexion</span>
-            </button>
+        <!-- Floating Product Card -->
+        <div
+          class="absolute top-8 right-0 w-48 transform rotate-6 hover:rotate-0 transition-transform duration-500 animate-float-slow">
+          <div class="bg-white rounded-2xl shadow-xl p-4 border border-slate-100">
+            <div
+              class="w-full h-24 bg-gradient-to-br from-green-100 to-teal-100 rounded-xl mb-3 flex items-center justify-center text-4xl">
+              🍖</div>
+            <div class="text-sm font-bold text-slate-900 mb-1">Nutrition Premium</div>
+            <div class="text-xs text-slate-500 mb-3">Royal Canin • Hill's</div>
+            <button routerLink="/produits-veterinaire"
+              class="w-full py-2 rounded-lg bg-gradient-to-r from-green-500 to-teal-500 text-white text-xs font-bold hover:shadow-lg transition-shadow">Commander</button>
           </div>
         </div>
-      </nav>
-    </div>
-  </div>
-</header>
 
-<!-- Hero Section -->
-<section class="hero-section">
-  <div class="container">
-    <div class="hero-content">
-      <div class="hero-text">
-        <div class="hero-badge">
-          <span>👩‍⚕️ Espace Vétérinaire</span>
+        <!-- Floating Notification -->
+        <div
+          class="absolute bottom-12 left-0 w-56 transform -rotate-3 hover:rotate-0 transition-transform duration-500 animate-fade-in-up">
+          <div class="bg-white rounded-2xl shadow-xl p-4 border border-slate-100">
+            <div class="flex items-start gap-3">
+              <div
+                class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white flex-shrink-0">
+                🔔</div>
+              <div>
+                <div class="text-xs font-bold text-slate-900 mb-1">Nouveau rendez-vous</div>
+                <div class="text-xs text-slate-500">Dr. Martin a confirmé le RDV de 16h</div>
+              </div>
+            </div>
+          </div>
         </div>
-        <h1 class="hero-title">
-          Simplifiez votre pratique vétérinaire avec
-          <span class="gradient-text">VITALFEED Vet</span>
-        </h1>
-        <p class="hero-description">
-          Une application complète conçue spécialement pour les vétérinaires modernes.
-          Gérez vos patients, planifiez vos consultations et améliorez la qualité de vos soins
-          grâce à notre plateforme intuitive et sécurisée.
-        </p>
-        <div class="hero-actions">
-          <button class="btn-primary" (click)="scrollToPricing()">
-            🚀 Nous Rejoindre
-          </button>
-          <button class="btn-secondary" (click)="openDemoVideo()">
-            📹 Voir la démo
-          </button>
-          <button class="btn-secondary" (click)="scrollToProducts()">
-            🛒 Voir nos produits
-          </button>
-        </div>
-        <div class="hero-stats">
-          <div class="stat">
-            <span class="stat-number">500+</span>
-            <span class="stat-label">Vétérinaires</span>
-          </div>
-          <div class="stat">
-            <span class="stat-number">10k+</span>
-            <span class="stat-label">Patients</span>
-          </div>
-          <div class="stat">
-            <span class="stat-number">98%</span>
-            <span class="stat-label">Satisfaction</span>
-          </div>
+
+        <!-- Decorative Paw Prints -->
+        <div class="absolute top-4 left-4 text-purple-300 opacity-30 text-2xl animate-pulse">🐾</div>
+        <div class="absolute bottom-20 right-12 text-blue-300 opacity-30 text-3xl animate-pulse animation-delay-2000">🐾
         </div>
       </div>
-      <div class="hero-visual">
-        <div class="hero-card">
-          <div class="card-header">
-            <div class="card-title">👋 Bienvenue {{ userFullName ? 'Dr. ' + userFullName : 'Docteur' }} !</div>
-            <div class="card-status">✨ Membre actif</div>
-          </div>
-          <div class="card-content">
-            <div class="welcome-message">
-              <p class="welcome-text">Nous sommes ravis de vous accompagner dans votre pratique vétérinaire quotidienne.
-              </p>
-            </div>
-            <div class="quick-benefits">
-              <div class="benefit-item">
-                <span class="benefit-icon">✅</span>
-                <span class="benefit-text">Accès illimité aux produits</span>
-              </div>
-              <div class="benefit-item">
-                <span class="benefit-icon">✅</span>
-                <span class="benefit-text">Support client prioritaire</span>
-              </div>
-              <div class="benefit-item">
-                <span class="benefit-icon">✅</span>
-                <span class="benefit-text">Livraison gratuite</span>
-              </div>
-            </div>
-          </div>
-        </div>
+
+    </div>
+    <!-- Centered Bottom CTA with White Background -->
+    <div
+      class="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 flex flex-col items-center gap-2 cursor-pointer transition-transform hover:-translate-y-1 duration-300">
+      <div
+        class="bg-white/90 backdrop-blur-sm px-6 py-3 rounded-full shadow-lg border border-white/50 hover:shadow-xl transition-all duration-300 flex items-center gap-3 group">
+        <span
+          class="text-xs font-bold text-slate-800 uppercase tracking-widest group-hover:text-purple-600 transition-colors">
+          Voir tous les détails de l'application
+        </span>
+      </div>
+      <div class="flex flex-col items-center -space-y-2">
+        <svg class="w-5 h-5 text-purple-400 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+        </svg>
+        <svg class="w-5 h-5 text-purple-600 animate-bounce [animation-delay:150ms]" fill="none" stroke="currentColor"
+          viewBox="0 0 24 24" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+        </svg>
       </div>
     </div>
   </div>
+
 </section>
+
+
 
 <!-- Decorative Divider -->
 <div class="relative py-8 bg-gradient-to-r from-blue-50 via-white to-blue-50">
@@ -175,7 +371,7 @@
       <div class="flex-grow border-t-2 border-blue-200 max-w-md"></div>
       <div class="mx-6 flex items-center space-x-2">
         <span class="text-3xl">✨</span>
-        <span class="text-gray-600 font-semibold">Fonctionnalités</span>
+        <span class="text-gray-600 font-semibold">xxxxxxxxxxxxxx</span>
         <span class="text-3xl">✨</span>
       </div>
       <div class="flex-grow border-t-2 border-blue-200 max-w-md"></div>
@@ -183,22 +379,268 @@
   </div>
 </div>
 
+<!-- Two-Column Layout: Main Content + Blog -->
+<section class="bg-white py-12 section-spacing">
+  <div class="fixed-layout-container">
+    <div class="flex flex-col lg:flex-row gap-6 items-start">
+      
+      <!-- LEFT COLUMN: Main Content (75% width) -->
+      <div class="w-full lg:w-[75%] flex-shrink-0">
+
 <!-- Features Section -->
-<section class="features-section">
-  <div class="container">
-    <div class="section-header">
-      <h2 class="section-title">Fonctionnalités conçues pour vous</h2>
-      <p class="section-description">
-        Découvrez comment VITALFEED Vet peut transformer votre pratique quotidienne
+<section class="mb-16">
+  <div class="w-full">
+    <div class="section-header mb-12">
+      <h2 class="text-5xl md:text-6xl font-black text-center text-slate-900 mb-8">
+        Les Directives D'évaluation Nutritionnelle
+      </h2>
+      <p class="text-xl text-slate-700 text-center w-full mx-auto leading-relaxed px-4">
+        L'AAHA et la WSAVA (2011) recommandent de suivre les directives d'évaluation nutritionnelle afin d'assurer une bonne qualité et une bonne espérance de vie à tous les animaux de compagnie. Pour débuter une évaluation nutritionnelle, il est important de suivre les étapes suivantes.
       </p>
     </div>
 
-    <div class="features-grid">
-      <div *ngFor="let feature of features" class="feature-card">
-        <div class="feature-icon">{{ feature.icon }}</div>
-        <h3 class="feature-title">{{ feature.title }}</h3>
-        <p class="feature-description">{{ feature.description }}</p>
+    <!-- First 3 Cards - Vertical Grid -->
+    <div class="grid md:grid-cols-3 gap-10 mb-10">
+      <!-- Card 1: Antécédents médicaux -->
+      <div class="group relative bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border-2 border-blue-100 hover:border-blue-300 transform hover:-translate-y-2 flex flex-col h-full">
+        <!-- Decorative gradient background -->
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-blue-50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+        
+        <!-- Badge -->
+        <div class="absolute top-6 right-6 z-10">
+          <span class="px-4 py-1.5 bg-blue-500 text-white text-xs font-bold rounded-full shadow-lg">
+            Essentiel
+          </span>
+        </div>
+
+        <div class="relative p-10 flex-1 flex flex-col">
+          <!-- Icon -->
+            <div class="w-28 h-28 rounded-2xl flex items-center justify-center text-7xl mb-8 group-hover:scale-110 transition-all duration-500 mx-auto">
+            📋
+          </div>
+
+          <!-- Title -->
+          <h3 class="text-3xl font-bold text-slate-900 mb-6 group-hover:text-blue-600 transition-colors">
+            Antécédents médicaux
+          </h3>
+
+          <!-- Description -->
+          <p class="text-slate-600 leading-relaxed mb-8 text-lg">
+            Les antécédents médicaux doivent inclure les antécédents de vaccination, les méthodes d'alimentation, de prévention contre les parasites et les puces, ainsi que toutes les maladies, traitements ou médicaments quotidiens antérieurs.
+          </p>
+
+          <!-- Details List -->
+          <div class="space-y-4">
+            <div class="flex items-start gap-3 text-base text-slate-700">
+              <svg class="w-6 h-6 text-blue-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+              <span>Historique de vaccination complet</span>
+            </div>
+            <div class="flex items-start gap-3 text-base text-slate-700">
+              <svg class="w-6 h-6 text-blue-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+              <span>Méthodes d'alimentation utilisées</span>
+            </div>
+            <div class="flex items-start gap-3 text-base text-slate-700">
+              <svg class="w-6 h-6 text-blue-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+              <span>Prévention antiparasitaire</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom accent -->
+        <div class="h-2 bg-gradient-to-r from-blue-500 to-blue-600"></div>
+
+
       </div>
+
+      <!-- Card 2: Histoire nutritionnelle -->
+      <div class="group relative bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border-2 border-green-100 hover:border-green-300 transform hover:-translate-y-2">
+        <!-- Decorative gradient background -->
+        <div class="absolute inset-0 bg-gradient-to-br from-green-50 via-white to-green-50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+        
+        <!-- Badge -->
+        <div class="absolute top-6 right-6 z-10">
+          <span class="px-4 py-1.5 bg-green-500 text-white text-xs font-bold rounded-full shadow-lg">
+            Important
+          </span>
+        </div>
+
+        <div class="relative p-10">
+          <!-- Icon -->
+            <div class="w-28 h-28 rounded-2xl flex items-center justify-center text-7xl mb-8 group-hover:scale-110 transition-all duration-500 mx-auto">
+            🍽️
+          </div>
+
+          <!-- Title -->
+          <h3 class="text-3xl font-bold text-slate-900 mb-6 group-hover:text-green-600 transition-colors">
+            Histoire nutritionnelle
+          </h3>
+
+          <!-- Description -->
+          <p class="text-slate-600 leading-relaxed mb-8 text-lg">
+            L'anamnèse nutritionnelle comprend une évaluation détaillée du patient, incluant les éléments suivants :
+          </p>
+
+          <!-- Details List -->
+          <div class="space-y-4">
+            <div class="flex items-start gap-3 text-base text-slate-700">
+              <svg class="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+              <span>Alimentation (les aliments destinés à l'alimentation animale doivent être identifiés par marque, type et saveur)</span>
+            </div>
+            <div class="flex items-start gap-3 text-base text-slate-700">
+              <svg class="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+              <span>Méthodes d'alimentation (libre choix, repas à heures fixes, repas mesurés, etc.)</span>
+            </div>
+            <div class="flex items-start gap-3 text-base text-slate-700">
+              <svg class="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+              <span>Quantité nourrie</span>
+            </div>
+            <div class="flex items-start gap-3 text-base text-slate-700">
+              <svg class="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+              <span>Modifications récentes du régime alimentaire</span>
+            </div>
+            <div class="flex items-start gap-3 text-base text-slate-700">
+              <svg class="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+              <span>Mobilité et exercice</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom accent -->
+        <div class="h-2 bg-gradient-to-r from-green-500 to-green-600"></div>
+      </div>
+
+      <!-- Card 3: Examen physique -->
+      <div class="group relative bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border-2 border-purple-100 hover:border-purple-300 transform hover:-translate-y-2">
+        <!-- Decorative gradient background -->
+        <div class="absolute inset-0 bg-gradient-to-br from-purple-50 via-white to-purple-50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+        
+        <!-- Badge -->
+        <div class="absolute top-6 right-6 z-10">
+          <span class="px-4 py-1.5 bg-purple-500 text-white text-xs font-bold rounded-full shadow-lg">
+            Critique
+          </span>
+        </div>
+
+        <div class="relative p-10">
+          <!-- Icon -->
+            <div class="w-28 h-28 rounded-2xl flex items-center justify-center text-7xl mb-8 group-hover:scale-110 transition-all duration-500 mx-auto">
+            🩺
+          </div>
+
+          <!-- Title -->
+          <h3 class="text-3xl font-bold text-slate-900 mb-6 group-hover:text-purple-600 transition-colors">
+            Examen physique
+          </h3>
+
+          <!-- Description -->
+          <p class="text-slate-600 leading-relaxed mb-8 text-lg">
+            L'examen physique comprend l'évaluation des éléments suivants :
+          </p>
+
+          <!-- Details List -->
+          <div class="space-y-4">
+            <div class="flex items-start gap-3 text-base text-slate-700">
+              <svg class="w-6 h-6 text-purple-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+              <span>Poids corporel</span>
+            </div>
+            <div class="flex items-start gap-3 text-base text-slate-700">
+              <svg class="w-6 h-6 text-purple-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+              <span>Score de condition corporelle (BCS) - Système de notation de 1 à 9 points</span>
+            </div>
+            <div class="flex items-start gap-3 text-base text-slate-700">
+              <svg class="w-6 h-6 text-purple-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+              <span>Estimation de la masse grasse corporelle</span>
+            </div>
+            <div class="flex items-start gap-3 text-base text-slate-700">
+              <svg class="w-6 h-6 text-purple-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+              <span>Score de condition musculaire (MCS)</span>
+            </div>
+            <div class="flex items-start gap-3 text-base text-slate-700">
+              <svg class="w-6 h-6 text-purple-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+              <span>Palpation des temporaux, des omoplates, des vertèbres lombaires et des os du bassin</span>
+            </div>
+            <div class="flex items-start gap-3 text-base text-slate-700">
+              <svg class="w-6 h-6 text-purple-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+              <span>Examen buccal et rectal</span>
+            </div>
+            <div class="flex items-start gap-3 text-base text-slate-700">
+              <svg class="w-6 h-6 text-purple-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+              <span>Évaluation de la peau et du pelage</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom accent -->
+        <div class="h-2 bg-gradient-to-r from-purple-500 to-purple-600"></div>
+      </div>
+    </div>
+
+    <!-- Card 4: Bilan / Analyses - Full Width Horizontal -->
+    <div class="group relative bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border-2 border-teal-100 hover:border-teal-300">
+  <!-- Decorative gradient background -->
+  <div class="absolute inset-0 bg-gradient-to-br from-teal-50 via-white to-cyan-50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+  
+  <!-- Badge -->
+  <div class="absolute top-6 right-6 z-10">
+    <span class="px-4 py-1.5 bg-teal-500 text-white text-xs font-bold rounded-full shadow-lg">
+      Diagnostic
+    </span>
+  </div>
+
+  <div class="relative p-8">
+    <div class="flex flex-col lg:flex-row gap-8 items-start">
+      <!-- Left: Icon and Title -->
+      <div class="flex-shrink-0">
+        <div class="w-24 h-24 rounded-2xl flex items-center justify-center text-7xl mb-6 group-hover:scale-110 transition-all duration-500 mx-auto">
+          🔬
+        </div>
+        <h3 class="text-3xl font-bold text-slate-900 mb-4 group-hover:text-teal-600 transition-colors">
+          Bilan / Analyses
+        </h3>
+      </div>
+
+      <!-- Right: Description and Details -->
+      <div class="flex-1 pt-4">
+        <p class="text-slate-600 leading-relaxed mb-6 text-lg">
+          Ce bilan comprend notamment un examen de laboratoire incluant une numération formule sanguine (NFS), un bilan biochimique sanguin, un bilan thyroïdien et une analyse d'urine. Les résultats des analyses de laboratoire pouvant indiquer des carences nutritionnelles susceptibles d'être corrigées par une intervention nutritionnelle sont l'anémie, l'hypoalbuminémie, l'hypokaliémie, l'hyperuricémie et l'hypertriglycéridémie, l'hyperglycémie ou l'hypercholestérolémie.
+        </p>
+            
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom accent -->
+      <div class="h-2 bg-gradient-to-r from-teal-500 to-cyan-500"></div>
     </div>
   </div>
 </section>
@@ -209,58 +651,364 @@
     <div class="flex items-center justify-center">
       <div class="flex-grow border-t-2 border-green-200 max-w-md"></div>
       <div class="mx-6 flex items-center space-x-2">
-        <span class="text-3xl">💬</span>
-        <span class="text-gray-600 font-semibold">Témoignages</span>
-        <span class="text-3xl">⭐</span>
+        <span class="text-3xl">✨</span>
+        <span class="text-gray-600 font-semibold">Fonctionnalités</span>
+        <span class="text-3xl">✨</span>
       </div>
       <div class="flex-grow border-t-2 border-green-200 max-w-md"></div>
     </div>
   </div>
 </div>
 
-<!-- Testimonials Section -->
-<section class="testimonials-section">
-  <div class="container">
-    <div class="section-header">
-      <h2 class="section-title">Ce que disent nos utilisateurs</h2>
-      <p class="section-description">
-        Des vétérinaires comme vous qui ont transformé leur pratique
-      </p>
+<!-- VITAL NUTRI Feature Showcase Section -->
+<section class="vital-nutri-section relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-green-50 pt-8 pb-24">
+  <!-- Decorative Background Elements -->
+  <div class="absolute top-0 left-0 w-96 h-96 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
+  <div class="absolute top-0 right-0 w-96 h-96 bg-green-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
+  <div class="absolute bottom-0 left-1/2 w-96 h-96 bg-purple-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
+
+  <div class="w-full px-4 relative z-10">
+    <!-- Main Title Section -->
+    <div class="text-center mb-20">
+     
+      <h2 class="text-6xl font-bold mb-6 bg-gradient-to-r from-blue-600 via-green-600 to-blue-600 bg-clip-text text-transparent">VITAL NUTRI</h2>
+      <p class="text-xl text-gray-700 w-full mx-auto leading-relaxed px-4">Parce que le conseil nutritionnel est une activité à part entière de la clinique vétérinaire, que chaque animal est unique et que les propriétaires attendent de leur clinique un conseil et un suivi personnalisé, VITAL NUTRI s'impose aujourd'hui comme le logiciel de recommandation et de suivi nutritionnels pour nos compagnons.</p>
     </div>
 
-    <div class="testimonials-grid">
-      <div *ngFor="let testimonial of testimonials" class="testimonial-card">
-        <div class="testimonial-content">
-          <div class="testimonial-rating">
-            <span *ngFor="let star of [1,2,3,4,5]" class="star">⭐</span>
-          </div>
-          <p class="testimonial-text">"{{ testimonial.content }}"</p>
+    
+
+    <!-- Feature Cards Layout: Left tall + Right stacked + Bottom full-width -->
+    <div class="grid grid-cols-2 gap-10 mb-10 items-stretch">
+      <!-- Left: Description Card (Tall) -->
+      <div class="bg-white rounded-3xl p-10 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 border-l-4 border-blue-500 group flex flex-col">
+        <div class="flex items-center gap-4 mb-8">
+          <div class="text-6xl group-hover:scale-110 transition-transform duration-300">💡</div>
+          <h3 class="text-3xl font-bold text-blue-600">Description</h3>
         </div>
-        <div class="testimonial-author">
-          <div class="author-avatar">{{ testimonial.avatar }}</div>
-          <div class="author-info">
-            <div class="author-name">{{ testimonial.name }}</div>
-            <div class="author-role">{{ testimonial.role }}</div>
+        <p class="text-gray-700 mb-8 leading-relaxed text-base">VITAL NUTRI est le premier et l'unique logiciel tunisien en ligne pour l'élaboration de plans nutritionnels vétérinaires. C'est un logiciel de recommandation et de suivi nutritionnels proposé aux cliniques vétérinaires par VITALFEED.</p>
+        <ul class="space-y-4 mb-8">
+          <li class="flex items-start gap-3 text-gray-700 hover:text-blue-600 transition-colors duration-200">
+            <span class="text-blue-500 mt-1 text-xl">✓</span>
+            <span class="text-base">Calcule la ration correcte d'aliments industriels pour le chien et le chat</span>
+          </li>
+          <li class="flex items-start gap-3 text-gray-700 hover:text-blue-600 transition-colors duration-200">
+            <span class="text-blue-500 mt-1 text-xl">✓</span>
+            <span class="text-base">Permet au vétérinaire de composer des régimes ménagers pour chiens et chats</span>
+          </li>
+          <li class="flex items-start gap-3 text-gray-700 hover:text-blue-600 transition-colors duration-200">
+            <span class="text-blue-500 mt-1 text-xl">✓</span>
+            <span class="text-base">Élabore automatiquement des menus et recettes</span>
+          </li>
+          <li class="flex items-start gap-3 text-gray-700 hover:text-blue-600 transition-colors duration-200">
+            <span class="text-blue-500 mt-1 text-xl">✓</span>
+            <span class="text-base">Offre au propriétaire la possibilité d'avoir en ligne le bilan nutritionnel de son chien ou de son chat</span>
+          </li>
+          <li class="flex items-start gap-3 text-gray-700 hover:text-blue-600 transition-colors duration-200">
+            <span class="text-blue-500 mt-1 text-xl">✓</span>
+            <span class="text-base">Conforme aux standards des professions de santé animale en lien avec la nutrition</span>
+          </li>
+        </ul>
+        <div class="bg-blue-50 rounded-2xl p-8 border-l-4 border-blue-400">
+          <h4 class="font-bold text-blue-700 mb-4 text-base">Base de données officielle CIQUAL + USDA + FCÉN</h4>
+          <ul class="space-y-3 text-base text-gray-700">
+            <li class="flex items-start gap-2">
+              <span class="text-blue-500">•</span>
+              <span> 56 nutriments disponibles par aliments</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-blue-500">•</span>
+              <span>+ 650 000 données nutritionnelles</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-blue-500">•</span>
+              <span>13 500 aliments bruts, transformés et compléments alimentaires</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-blue-500">•</span>
+              <span>Besoins nutritionnels des chats et des chiens selon : FEDIAF AAFCO - NRC</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-blue-500">•</span>
+              <span>Base de données des aliments secs (croquettes importés en Tunisie)</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-blue-500">•</span>
+              <span>+250 aliments secs physiologiques pour chiens et chats (les aliments fabriqués localement ne figurent pas dans cette base)</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Right: Stacked Cards -->
+      <div class="flex flex-col gap-10 h-full">
+        <!-- À quoi sert Card (Top) -->
+        <div class="bg-white rounded-3xl p-10 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 border-l-4 border-green-500 group flex-1 flex flex-col">
+          <div class="flex items-center gap-4 mb-6">
+            <div class="text-5xl group-hover:scale-110 transition-transform duration-300">🎯</div>
+            <h3 class="text-3xl font-bold text-green-600">À quoi sert</h3>
+          </div>
+          <p class="text-gray-700 mb-6 leading-relaxed text-base">Pour analyser des enquêtes alimentaires, faire des relevés d'ingesta, évaluer des apports, calculer des rations, créer un menu ou quantifier une recette.</p>
+          <div class="bg-green-50 rounded-2xl p-6 border-l-4 border-green-400">
+            <p class="text-gray-700 font-semibold text-base">Cet outil analytique professionnel sert à faire des BILANS DIÉTÉTIQUES RAPIDES, il permet de couvrir 95% des besoins en consultation libérale.</p>
+          </div>
+        </div>
+
+        <!-- Pour QUI Card (Bottom) -->
+        <div class="bg-white rounded-3xl p-10 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 border-l-4 border-purple-500 group flex-1 flex flex-col">
+          <div class="flex items-center gap-4 mb-6">
+            <div class="text-5xl group-hover:scale-110 transition-transform duration-300">👥</div>
+            <h3 class="text-3xl font-bold text-purple-600">Pour QUI ?</h3>
+          </div>
+          <p class="text-gray-700 text-base leading-relaxed">C'est un outil qui permet au vétérinaire de gérer la santé alimentaire des animaux à 360°. Ce programme n'est pas seulement un logiciel qui élabore des régimes ménagers pour chiens et chats. Il permet de composer des plans nutritionnels pour chiens et chats, calculer les rations de croquettes, déterminer énergétiques, focalisation les nutriments et bien plus encore.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Atouts Card (Full Width Bottom) -->
+    <div class="bg-white rounded-3xl p-10 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 border-l-4 border-orange-500 group mb-12">
+      <div class="flex items-center gap-4 mb-8">
+        <div class="text-6xl group-hover:scale-110 transition-transform duration-300">⭐</div>
+        <h3 class="text-3xl font-bold text-orange-600">Atouts</h3>
+      </div>
+      <div class="grid grid-cols-2 gap-8 mb-6">
+        <ul class="space-y-4">
+          <li class="flex items-start gap-3 text-gray-700 hover:text-orange-600 transition-colors duration-200">
+            <span class="text-orange-500 mt-1 text-xl">•</span>
+            <span class="text-base">Les aliments sont adaptés au profil de l'animal selon son âge, sa race, son poids.</span>
+          </li>
+          <li class="flex items-start gap-3 text-gray-700 hover:text-orange-600 transition-colors duration-200">
+            <span class="text-orange-500 mt-1 text-xl">•</span>
+            <span class="text-base">La ration est calculée automatiquement mais le vétérinaire a la liberté de la corriger afin de l'adapter spécifiquement aux besoins de l'animal.</span>
+          </li>
+        </ul>
+        <ul class="space-y-4">
+          <li class="flex items-start gap-3 text-gray-700 hover:text-orange-600 transition-colors duration-200">
+            <span class="text-orange-500 mt-1 text-xl">•</span>
+            <span class="text-base">Gère le suivi nutritionnel dans le temps, tout au long de la vie de l'animal : A chaque visite, un rendez-vous de suivi nutritionnel peut être positionné.</span>
+          </li>
+          <li class="flex items-start gap-3 text-gray-700 hover:text-orange-600 transition-colors duration-200">
+            <span class="text-orange-500 mt-1 text-xl">•</span>
+            <span class="text-base">Permet enfin de suivre l'évolution du poids de l'animal en comparaison avec sa courbe théorique.</span>
+          </li>
+        </ul>
+      </div>
+      <div class="flex items-center justify-center gap-3 text-gray-700 hover:text-orange-600 transition-colors duration-200">
+        <span class="text-orange-500 text-xl">•</span>
+        <span class="text-base">Le vétérinaire a également la possibilité d'imprimer une recommandation personnalisée à l'image de la clinique, intégrant ses propres conseils.</span>
+      </div>
+    </div>
+    <!-- End Atouts Card -->
+
+  </div>
+  <!-- End container -->
+</section>
+<!-- End VITAL NUTRI Section -->
+
+      </div>
+      <!-- END LEFT COLUMN -->
+
+      <!-- VERTICAL DIVIDER -->
+      <div class="hidden lg:block w-px bg-gradient-to-b from-transparent via-gray-300 to-transparent self-stretch"></div>
+
+      <!-- RIGHT COLUMN: Blog/News Section (25% width) -->
+      <aside class="w-full lg:w-[25%] lg:sticky lg:top-24 self-start flex-shrink-0">
+        <div class="bg-white rounded-lg border border-gray-200 p-6">
+          
+          <!-- Blog Header -->
+          <div class="mb-6">
+            <h2 class="text-2xl font-bold text-gray-900 mb-1">Actualités</h2>
+            <div class="w-12 h-1 bg-red-600"></div>
+          </div>
+
+          <!-- Loading State -->
+          <div *ngIf="isLoadingBlogs" class="flex justify-center py-8">
+            <div class="animate-spin rounded-full h-8 w-8 border-2 border-blue-600 border-t-transparent"></div>
+          </div>
+
+          <!-- Error State -->
+          <div *ngIf="blogError && !isLoadingBlogs" class="text-center py-8 text-red-600 text-sm">
+            {{ blogError }}
+          </div>
+
+          <!-- Blog Posts -->
+          <div *ngIf="!isLoadingBlogs && !blogError">
+            <div *ngIf="blogPosts.length > 0" class="space-y-6 mb-6">
+              <article *ngFor="let post of getPaginatedBlogPosts()" class="border-b border-gray-200 pb-6 last:border-0 last:pb-0">
+                <time class="text-sm text-gray-500 block mb-2">{{ formatBlogDate(post.createdAt) }}</time>
+                <h4 class="text-base font-bold text-gray-900 mb-2 leading-tight">{{ post.title }}</h4>
+                <p class="text-sm text-gray-600 mb-3 line-clamp-2">{{ post.description }}</p>
+                <button 
+                  (click)="openPdfModal(post)" 
+                  class="text-sm font-semibold text-red-600 hover:text-red-700 transition-colors">
+                  Lire la suite
+                </button>
+              </article>
+            </div>
+
+            <!-- Pagination Controls -->
+            <div *ngIf="blogPosts.length > blogItemsPerPage" class="flex items-center justify-between pt-4 border-t border-gray-200">
+              <button 
+                (click)="previousBlogPage()" 
+                [disabled]="blogCurrentPage === 1"
+                class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                </svg>
+                <span>Précédent</span>
+              </button>
+              
+              <span class="text-sm text-gray-600 font-medium">
+                {{ blogCurrentPage }} / {{ getBlogTotalPages() }}
+              </span>
+              
+              <button 
+                (click)="nextBlogPage()" 
+                [disabled]="blogCurrentPage === getBlogTotalPages()"
+                class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200">
+                <span>Suivant</span>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Empty State -->
+            <div *ngIf="blogPosts.length === 0" class="text-center py-8 text-gray-500 text-sm">
+              Aucun article disponible pour le moment
+            </div>
+          </div>
+
+        </div>
+      </aside>
+      <!-- END RIGHT COLUMN -->
+
+    </div>
+    <!-- END flex container for two-column layout -->
+  </div>
+  <!-- END outer container -->
+</section>
+<!-- END Two-Column Layout Section -->
+
+
+
+<!-- Votre Identité Section - Full Width -->
+<section class="pb-16 bg-gradient-to-r from-green-50 via-white to-green-50">
+  <div class="container max-w-7xl mx-auto px-4">
+    
+    <!-- Decorative Header -->
+    <div class="flex items-center justify-center mb-12">
+      <div class="flex-grow border-t-2 border-green-200 max-w-md"></div>
+      <div class="mx-6 flex items-center space-x-2">
+        <span class="text-3xl">✨</span>
+        <span class="text-gray-600 font-semibold">Votre Identité, Votre Logiciel</span>
+        <span class="text-3xl">✨</span>
+      </div>
+      <div class="flex-grow border-t-2 border-green-200 max-w-md"></div>
+    </div>
+
+    <!-- Blue Banner -->
+    <div class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl p-8 mb-12 shadow-xl">
+      <div class="flex items-center gap-4 mb-4">
+        <div class="text-5xl">🎨</div>
+        <h2 class="text-3xl font-bold text-white">
+          PERSONNALISEZ LE LOGICIEL AVEC VOTRE NOM ET VOTRE LOGO
+        </h2>
+      </div>
+      <p class="text-white text-xl leading-relaxed text-center">
+        Vous pouvez insérer vos propres coordonnées et logos dans les documents imprimables du logiciel. Ainsi vous augmentez votre valeur ajoutée et votre crédibilité auprès de vos clients et patients !
+      </p>
+    </div>
+  </div>
+
+  <!-- Two Column Layout: Configuration + Video - FULL WIDTH -->
+  <div class="w-full px-6 lg:px-12 xl:px-16">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch max-w-[1800px] mx-auto">
+      
+      <!-- LEFT: Configuration Minimale -->
+      <div class="bg-white rounded-2xl shadow-xl p-10 border border-gray-200 flex flex-col">
+        <div class="flex items-center gap-4 mb-8">
+          <div class="text-5xl">⚙️</div>
+          <h3 class="text-4xl font-bold text-gray-900">CONFIGURATION MINIMALE REQUISE :</h3>
+        </div>
+        
+        <div class="space-y-5 flex-1">
+          <div class="flex items-start gap-4">
+            <span class="text-blue-500 text-2xl mt-1">💻</span>
+            <div>
+              <span class="font-semibold text-gray-900 text-lg">Appareil :</span>
+              <span class="text-gray-700 text-lg"> ordinateur personnel (fonctionne sur PC et sur Mac) / ne fonctionne pas sur tablette ou smartphone</span>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4">
+            <span class="text-green-500 text-2xl mt-1">🖥️</span>
+            <div>
+              <span class="font-semibold text-gray-900 text-lg">Système d'exploitation :</span>
+              <span class="text-gray-700 text-lg"> Windows 10 et + ou iMac</span>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4">
+            <span class="text-purple-500 text-2xl mt-1">�</span>
+            <div>
+              <span class="font-semibold text-gray-900 text-lg">Tableur obligatoire :</span>
+              <span class="text-gray-700 text-lg"> Excel® 2013 et + ou Excel® for iMac / ne fonctionne pas sur Numbers, OpenOffice, GoogleSheet, Excel en ligne (cloud). Il faut avoir tableur en ligne.</span>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4">
+            <span class="text-orange-500 text-2xl mt-1">�</span>
+            <div>
+              <span class="font-semibold text-gray-900 text-lg">Taille du fichier :</span>
+              <span class="text-gray-700 text-lg"> 4,5 Mo</span>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4">
+            <span class="text-teal-500 text-2xl mt-1">🌍</span>
+            <div>
+              <span class="font-semibold text-gray-900 text-lg">Langue :</span>
+              <span class="text-gray-700 text-lg"> français</span>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4">
+            <span class="text-red-500 text-2xl mt-1">🔖</span>
+            <div>
+              <span class="font-semibold text-gray-900 text-lg">Version :</span>
+              <span class="text-gray-700 text-lg"> Vital Nutri – 2026</span>
+            </div>
           </div>
         </div>
       </div>
+
+      <!-- RIGHT: Video Demonstration -->
+      <div class="bg-white rounded-2xl shadow-xl p-10 border border-gray-200 flex flex-col">
+        <div class="flex items-center gap-4 mb-8">
+          <div class="text-5xl">🎥</div>
+          <h3 class="text-4xl font-bold text-gray-900">Vidéo de Démonstration</h3>
+        </div>
+        
+        <!-- Video Container -->
+        <div class="relative bg-gray-900 rounded-xl overflow-hidden shadow-lg flex-1 flex items-center justify-center">
+          <video 
+            [src]="demoVideoPath" 
+            controls 
+            class="w-full h-full"
+            style="aspect-ratio: 16/9;">
+            Votre navigateur ne supporte pas la lecture de vidéos.
+          </video>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
 
-<!-- Decorative Divider -->
-<div class="relative py-8 bg-gradient-to-r from-purple-50 via-white to-purple-50">
-  <div class="container max-w-7xl mx-auto px-4">
-    <div class="flex items-center justify-center">
-      <div class="flex-grow border-t-2 border-purple-200 max-w-md"></div>
 
-      <div class="flex-grow border-t-2 border-purple-200 max-w-md"></div>
-    </div>
-  </div>
-</div>
 
-<!-- Pricing Section -->
-<section id="pricing" class="pricing-section">
+<!-- 
+<section *ngIf="showPricing" id="pricing" class="pricing-section">
   <div class="container">
     <div class="section-header">
       <div class="pricing-title-wrapper">
@@ -271,7 +1019,7 @@
       <p class="section-description enhanced-description">
         <span class="highlight-text">Des tarifs transparents</span> adaptés à la taille de votre pratique
       </p>
-      
+
     </div>
 
     <div class="pricing-grid">
@@ -298,8 +1046,9 @@
     </div>
   </div>
 </section>
+ -->
 
-<!-- Decorative Divider -->
+<!-- Decorative Divider 
 <div class="relative py-10 bg-gradient-to-r from-blue-50 via-green-50 to-blue-50">
   <div class="container max-w-7xl mx-auto px-4">
     <div class="text-center">
@@ -320,15 +1069,16 @@
     </div>
   </div>
 </div>
+-->
 
-<!-- Product Carousel Section -->
+<!-- Product Carousel Section 
 <section id="products" class="py-12 bg-white">
   <div class="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
 
-    <!-- Automatic Product Carousel -->
+    
     <div class="relative">
-      <!-- Carousel Container -->
+      
       <div class="overflow-hidden">
         <div class="flex transition-transform duration-500 ease-in-out" [style.transform]="getTransformValue()">
           <div *ngFor="let product of displayProducts; trackBy: trackByProductId"
@@ -374,7 +1124,7 @@
                     </svg>
                     Voir les détails
                   </button>
-                  <!--
+                  
                   <button 
                     class="bg-vet-blue hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg transition-all duration-300 flex items-center"
                     (click)="addToCart(product)"
@@ -384,7 +1134,7 @@
                     </svg>
                     {{ product.inStock ? 'Ajouter' : 'Indisponible' }}
                   </button>
-                  -->
+                  
                 </div>
               </div>
             </div>
@@ -392,7 +1142,7 @@
         </div>
       </div>
 
-      <!-- Navigation Arrows -->
+     
       <button (click)="prevSlide()"
         class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white shadow-lg rounded-full p-3 transition-all duration-200 z-10">
         <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -408,7 +1158,7 @@
       </button>
     </div>
 
-    <!-- Slide Indicators -->
+    
     <div class="flex justify-center mt-8 space-x-2">
       <button *ngFor="let indicator of getSlideIndicators(); let i = index; trackBy: trackByIndex"
         (click)="goToSlide(i)" [class.bg-blue-500]="getCurrentIndicator() === i"
@@ -417,7 +1167,7 @@
       </button>
     </div>
 
-    <!-- Link to full product page -->
+    
     <div class="text-center mt-10">
       <button routerLink="/produits-veterinaire"
         class="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 inline-flex items-center">
@@ -429,6 +1179,7 @@
     </div>
   </div>
 </section>
+-->
 
 <!-- Decorative Divider -->
 <div class="relative py-8 bg-gradient-to-b from-white to-purple-50">
@@ -446,7 +1197,7 @@
 </div>
 
 <!-- CTA Section -->
-<section class="cta-section">
+<section class="cta-section" id="ctaCard" >
   <div class="container">
     <div class="cta-card">
       <div class="cta-content">
@@ -462,20 +1213,64 @@
   </div>
 </section>
 
-<!-- Bottom Decorative Section -->
-<div class="relative py-8 bg-gradient-to-b from-white to-vet-beige">
-  <div class="container max-w-7xl mx-auto px-4">
-    <div class="flex items-center justify-center">
-      <div class="flex-grow border-t-2 border-gray-300 max-w-md"></div>
-      <div class="mx-6 flex items-center space-x-2">
-        <span class="text-2xl">🐱</span>
-        <span class="text-gray-500 font-medium">VITALFEED Vet</span>
-        <span class="text-2xl">🐶</span>
+
+
+<!-- PDF Modal -->
+<div *ngIf="showPdfModal" 
+     class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-75 backdrop-blur-sm"
+     (click)="closePdfModal()">
+  <div class="relative w-full h-full max-w-7xl max-h-[95vh] bg-white rounded-2xl shadow-2xl overflow-hidden"
+       (click)="$event.stopPropagation()">
+    
+    <!-- Modal Header -->
+  <div class="flex items-center justify-between p-2 border-b border-gray-200 bg-gradient-to-r from-blue-600 to-blue-700">
+  <h3 class="text-lg font-bold text-white truncate pr-4">{{ currentPdfTitle }}</h3>
+  <button 
+    (click)="closePdfModal()"
+    class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg bg-white text-blue-600 hover:bg-blue-100 transition-colors shadow-lg">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+    </svg>
+  </button>
+</div>
+
+    <!-- PDF Viewer -->
+    <div class="w-full h-[calc(100%-4rem)] overflow-hidden bg-gray-100 relative">
+      <!-- Loading State -->
+      <div *ngIf="isPdfLoading" class="absolute inset-0 flex flex-col items-center justify-center bg-white z-10">
+        <div class="animate-spin rounded-full h-16 w-16 border-4 border-blue-600 border-t-transparent mb-4"></div>
+        <p class="text-gray-600 text-lg font-medium">Chargement du PDF...</p>
       </div>
-      <div class="flex-grow border-t-2 border-gray-300 max-w-md"></div>
+
+      <!-- PDF Content using iframe -->
+      <div *ngIf="currentPdfUrl" class="w-full h-full" [class.hidden]="isPdfLoading">
+        <iframe 
+          [src]="currentPdfUrl | safe: 'resourceUrl'"
+          class="w-full h-full border-0"
+          title="PDF Viewer"
+          (load)="onPdfLoad()"
+          (error)="onPdfError()"
+          style="background: white;">
+        </iframe>
+      </div>
+
+      <!-- Fallback button -->
+      <div *ngIf="currentPdfUrl" class="absolute bottom-4 right-4 z-20">
+        <a 
+          [href]="currentPdfUrl" 
+          target="_blank"
+          class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors shadow-lg">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+          </svg>
+          Ouvrir dans un nouvel onglet
+        </a>
+      </div>
     </div>
   </div>
 </div>
+
+
 
 <!-- Demo Video Modal -->
 <div *ngIf="showDemoModal" class="demo-modal-overlay" (click)="closeDemoVideo()">
@@ -527,8 +1322,7 @@
   </div>
 </div>
 
-<!-- 
-Footer -->
+<!-- Footer -->
 <footer class="bg-gray-900 text-white py-12">
   <div class="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="grid md:grid-cols-4 gap-8">
@@ -565,7 +1359,7 @@ Footer -->
                 d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
               </path>
             </svg>
-            contact&#64;vitalfeed.com
+            vitalnutri&#64;vitalfeed.com.tn
           </li>
           <li class="flex items-center">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

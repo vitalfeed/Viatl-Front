@@ -5,6 +5,18 @@
   overflow: hidden;
 }
 
+// Disabled select options styling
+select option:disabled {
+  color: #9ca3af !important;
+  background-color: #f3f4f6 !important;
+  font-style: italic;
+  cursor: not-allowed;
+}
+
+select option[disabled] {
+  opacity: 0.6;
+}
+
 
 // Toast Notification Styles
 .notification-toast {

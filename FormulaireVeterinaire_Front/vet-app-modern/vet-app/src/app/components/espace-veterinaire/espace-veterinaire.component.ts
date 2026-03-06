@@ -7,11 +7,23 @@ import { CartService, CartItem } from '../../services/cart.service';
 import { ProductService } from '../../services/product.service';
 import { Product } from '../../models/product.model';
 import { environment } from '../../../environments/environment';
+import { SafePipe } from '../../pipes/safe.pipe';
+
+interface BlogPost {
+  id: number;
+  title: string;
+  description: string;
+  type: string;
+  pdfFilename: string;
+  pdfRelativePath: string;
+  fileSize: number;
+  createdAt: string;
+}
 
 @Component({
   selector: 'app-espace-veterinaire',
   standalone: true,
-  imports: [CommonModule, RouterModule, HttpClientModule, ReactiveFormsModule],
+  imports: [CommonModule, RouterModule, HttpClientModule, ReactiveFormsModule, SafePipe],
   templateUrl: './espace-veterinaire.component.html',
   styleUrls: ['./espace-veterinaire.component.scss']
 })
@@ -64,60 +76,85 @@ export class EspaceVeterinaireComponent implements OnInit, OnDestroy {
   userName: string = '';
   userFullName: string = '';
 
+  // Blog properties
+  blogCurrentPage = 1;
+  blogItemsPerPage = 10;
+  blogPosts: BlogPost[] = [];
+  isLoadingBlogs = false;
+  blogError = '';
+  
+  // PDF Modal
+  showPdfModal = false;
+  currentPdfUrl = '';
+  currentPdfTitle = '';
+  isPdfLoading = false;
+  pdfBlobUrl: any = null;
+
+  get showPricing(): boolean {
+    // Show pricing if status is NOT 'ACTIVE' (so INACTIVE, PENDING, or empty)
+    return this.userStatus !== 'ACTIVE';
+  }
+
   features = [
     {
+      icon: '📋',
+      title: 'Antécédents médicaux',
+      description: 'Les antécédents médicaux doivent inclure les antécédents de vaccination, les méthodes d\'alimentation, de prévention contre les parasites et les puces, ainsi que toutes les maladies, traitements ou médicaments quotidiens antérieurs.',
+      details: [
+        'Historique de vaccination complet',
+        'Méthodes d\'alimentation utilisées',
+        'Prévention antiparasitaire',
+        'Traitements antérieurs',
+        'Médications quotidiennes'
+      ],
+      color: 'blue',
+      badge: 'Essentiel'
+    },
+    {
+      icon: '🍽️',
+      title: 'Histoire nutritionnelle',
+      description: 'L\'anamnèse nutritionnelle comprend une évaluation détaillée du patient, incluant les éléments suivants : alimentation (les aliments destinés à l\'alimentation animale doivent être identifiés par marque, type et saveur), méthodes d\'alimentation, quantité nourrie, modifications récentes du régime alimentaire, mobilité et exercice.',
+      details: [
+        'Marque et type d\'aliment',
+        'Méthodes d\'alimentation',
+        'Quantité nourrie quotidiennement',
+        'Modifications récentes',
+        'Niveau d\'activité physique'
+      ],
+      color: 'green',
+      badge: 'Important'
+    },
+    {
       icon: '🩺',
-      title: 'Gestion des Dossiers Médicaux',
-      description: 'Créez et gérez facilement les dossiers médicaux de vos patients à quatre pattes avec un système intuitif et sécurisé.'
+      title: 'Examen physique',
+      description: 'L\'examen physique comprend l\'évaluation des éléments suivants : poids corporel, Score de condition corporelle (BCS) - Système de notation de 1 à 9 points, Estimation de la masse grasse corporelle, Score de condition musculaire (MCS), Palpation des temporaux, des omoplates, des vertèbres lombaires et des os du bassin, Examen buccal et rectal, Évaluation de la peau et du pelage.',
+      details: [
+        'Poids corporel',
+        'BCS (1-9 points)',
+        'Masse grasse corporelle',
+        'Score musculaire (MCS)',
+        'Palpation osseuse',
+        'Examen buccal et rectal',
+        'État de la peau et pelage'
+      ],
+      color: 'purple',
+      badge: 'Critique'
     },
     {
-      icon: '📅',
-      title: 'Planification des Rendez-vous',
-      description: 'Organisez votre emploi du temps et envoyez des rappels automatiques aux propriétaires d\'animaux.'
-    },
-    {
-      icon: '💊',
-      title: 'Suivi des Traitements',
-      description: 'Suivez les traitements prescrits et recevez des alertes pour les rappels de vaccination et de médication.'
-    },
-    {
-      icon: '📊',
-      title: 'Statistiques et Analyses',
-      description: 'Analysez vos données de pratique avec des tableaux de bord détaillés et des rapports personnalisés.'
-    },
-    {
-      icon: '🔒',
-      title: 'Sécurité des Données',
-      description: 'Vos données et celles de vos patients sont protégées par un cryptage de niveau hospitalier.'
-    },
-    {
-      icon: '🚀',
-      title: 'Interface Moderne',
-      description: 'Une interface utilisateur intuitive et moderne conçue spécialement pour les professionnels vétérinaires.'
-    }
-  ];
-
-  testimonials = [
-    {
-      name: 'Dr. Sophie Martin',
-      role: 'Vétérinaire à Paris',
-      content: 'Cette application a révolutionné ma pratique quotidienne. Je gagne un temps précieux sur les tâches administratives.',
-      avatar: '👩‍⚕️',
-      rating: 5
-    },
-    {
-      name: 'Dr. Thomas Dubois',
-      role: 'Clinique vétérinaire de Lyon',
-      content: 'L\'interface est intuitive et mes assistants adorent la facilité d\'utilisation. Hautement recommandé !',
-      avatar: '👨‍⚕️',
-      rating: 5
-    },
-    {
-      name: 'Dr. Marie Leclerc',
-      role: 'Vétérinaire spécialisée',
-      content: 'Le suivi des traitements et la gestion des rappels sont exceptionnels. Mes clients apprécient le service.',
-      avatar: '👩‍⚕️',
-      rating: 5
+      icon: '🔬',
+      title: 'Bilan / Analyses',
+      description: 'Ce bilan comprend notamment un examen de laboratoire incluant une numération formule sanguine (NFS), un bilan biochimique sanguin, un bilan thyroïdien et une analyse d\'urine. Les résultats des analyses de laboratoire pouvant indiquer des carences nutritionnelles susceptibles d\'être corrigées par une intervention nutritionnelle sont l\'anémie, l\'hypoalbuminémie, l\'hypokaliémie, l\'hyperuricémie et l\'hypertriglycéridémie, l\'hyperglycémie ou l\'hypercholestérolémie. Ces résultats peuvent également révéler des signes précoces d\'insuffisance rénale ou hépatique.',
+      details: [
+        'NFS (Numération Formule Sanguine)',
+        'Bilan biochimique sanguin',
+        'Bilan thyroïdien',
+        'Analyse d\'urine',
+        'Détection carences nutritionnelles',
+        'Signes d\'insuffisance rénale/hépatique'
+      ],
+      color: 'red',
+      badge: 'Diagnostic',
+      fullWidth: true
     }
   ];
 
@@ -289,6 +326,9 @@ export class EspaceVeterinaireComponent implements OnInit, OnDestroy {
 
     // Load products automatically on page load
     this.loadProducts();
+    
+    // Load blog posts
+    this.loadBlogPosts();
 
     // Subscribe to cart updates
     this.cartService.cartItems$.subscribe(items => {
@@ -502,7 +542,11 @@ export class EspaceVeterinaireComponent implements OnInit, OnDestroy {
 
     this.productService.getAllProducts().subscribe({
       next: (products) => {
-        this.allProducts = products;
+        // Set price from first variant (minimum ID) for each product
+        this.allProducts = products.map(product => {
+          product.price = this.productService.getVariantPrice(product);
+          return product;
+        });
         this.products = this.getFeaturedProducts();
         this.createDisplayProducts();
         this.isLoading = false;
@@ -528,6 +572,196 @@ export class EspaceVeterinaireComponent implements OnInit, OnDestroy {
     } else {
       // Duplicate products to create seamless loop
       this.displayProducts = [...this.products, ...this.products];
+    }
+  }
+
+  /**
+   * Load blog posts from API
+   */
+  loadBlogPosts(): void {
+    this.isLoadingBlogs = true;
+    this.blogError = '';
+
+    this.http.get<BlogPost[]>(`${environment.apiUrl}/blogs/type/VETERINAIRE`, {
+      withCredentials: true
+    }).subscribe({
+      next: (posts) => {
+        this.blogPosts = posts;
+        this.isLoadingBlogs = false;
+      },
+      error: (error) => {
+        console.error('Error loading blog posts:', error);
+        this.blogError = 'Erreur lors du chargement des articles';
+        this.isLoadingBlogs = false;
+      }
+    });
+  }
+
+  /**
+   * Format date for display
+   */
+  formatBlogDate(dateString: string): string {
+    const date = new Date(dateString);
+    const months = [
+      'janvier', 'février', 'mars', 'avril', 'mai', 'juin',
+      'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'
+    ];
+    
+    const day = date.getDate();
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
+    
+    return `${day} ${month} ${year}`;
+  }
+
+  /**
+   * Open PDF in modal
+   */
+  openPdfModal(post: BlogPost): void {
+    console.log('=== OPENING PDF MODAL ===');
+    console.log('Post data:', post);
+
+    if (!post.pdfRelativePath) {
+      console.error('ERROR: No PDF path available');
+      return;
+    }
+
+    console.log('PDF Relative Path:', post.pdfRelativePath);
+
+    const pathParts = post.pdfRelativePath.replace('/uploads/pdfs', '').split('/').filter(p => p);
+    
+    console.log('Path parts after split:', pathParts);
+    
+    if (pathParts.length >= 3) {
+      const year = pathParts[0];
+      const month = pathParts[1];
+      const filename = pathParts[2];
+      
+      const pdfUrl = `${environment.apiUrl}/blogs/pdf/${year}/${month}/${filename}`;
+      console.log('✓ PDF URL constructed:', pdfUrl);
+      
+      this.currentPdfTitle = post.title;
+      this.showPdfModal = true;
+      this.isPdfLoading = true;
+      document.body.style.overflow = 'hidden';
+      
+      console.log('✓ Fetching PDF from API...');
+      
+      this.http.get(pdfUrl, {
+        responseType: 'blob',
+        withCredentials: true
+      }).subscribe({
+        next: (blob: Blob) => {
+          console.log('✓ PDF received! Size:', blob.size, 'Type:', blob.type);
+          
+          if (this.pdfBlobUrl) {
+            URL.revokeObjectURL(this.pdfBlobUrl);
+          }
+          
+          const pdfBlob = new Blob([blob], { type: 'application/pdf' });
+          this.pdfBlobUrl = URL.createObjectURL(pdfBlob);
+          this.currentPdfUrl = this.pdfBlobUrl;
+          
+          console.log('✓ Blob URL:', this.pdfBlobUrl);
+          
+          setTimeout(() => {
+            this.isPdfLoading = false;
+            console.log('✓ PDF ready!');
+          }, 300);
+        },
+        error: (error) => {
+          console.error('✗ Error fetching PDF:', error);
+          console.error('Error status:', error.status);
+          console.error('Error statusText:', error.statusText);
+          console.error('Error url:', error.url);
+          console.error('Error message:', error.message);
+
+          this.isPdfLoading = false;
+          
+          // If status is 200 or 0 but still error (CORS issue), try direct URL fallback
+          if (error.status === 200 || error.status === 0) {
+            console.log('Status 200 but error - trying fallback: direct URL in iframe');
+            this.currentPdfUrl = pdfUrl;
+            setTimeout(() => {
+              this.isPdfLoading = false;
+            }, 500);
+          } else {
+            // Real error, clear URL and show message
+            this.currentPdfUrl = '';
+            alert('Erreur lors du chargement du PDF (Status: ' + error.status + ')');
+          }
+        }
+      });
+    } else {
+      console.error('ERROR: Invalid path:', post.pdfRelativePath);
+    }
+  }
+
+  /**
+   * Close PDF modal
+   */
+  closePdfModal(): void {
+    this.showPdfModal = false;
+    this.isPdfLoading = false;
+    
+    // Revoke blob URL to free memory
+    if (this.pdfBlobUrl) {
+      URL.revokeObjectURL(this.pdfBlobUrl);
+      this.pdfBlobUrl = null;
+    }
+    
+    this.currentPdfUrl = '';
+    this.currentPdfTitle = '';
+    
+    // Restore body scroll
+    document.body.style.overflow = 'auto';
+  }
+
+  /**
+   * Handle PDF iframe load event
+   */
+  onPdfLoad(): void {
+    console.log('PDF iframe loaded successfully');
+  }
+
+  /**
+   * Handle PDF iframe error event
+   */
+  onPdfError(): void {
+    console.error('PDF iframe failed to load');
+  }
+
+  /**
+   * Get paginated blog posts
+   */
+  getPaginatedBlogPosts(): BlogPost[] {
+    const startIndex = (this.blogCurrentPage - 1) * this.blogItemsPerPage;
+    const endIndex = startIndex + this.blogItemsPerPage;
+    return this.blogPosts.slice(startIndex, endIndex);
+  }
+
+  /**
+   * Get total blog pages
+   */
+  getBlogTotalPages(): number {
+    return Math.ceil(this.blogPosts.length / this.blogItemsPerPage);
+  }
+
+  /**
+   * Navigate to next blog page
+   */
+  nextBlogPage(): void {
+    if (this.blogCurrentPage < this.getBlogTotalPages()) {
+      this.blogCurrentPage++;
+    }
+  }
+
+  /**
+   * Navigate to previous blog page
+   */
+  previousBlogPage(): void {
+    if (this.blogCurrentPage > 1) {
+      this.blogCurrentPage--;
     }
   }
 
@@ -600,12 +834,12 @@ export class EspaceVeterinaireComponent implements OnInit, OnDestroy {
 
   addToCart(product: Product) {
     this.cartService.addToCart(product);
-    console.log('Produit ajouté au panier:', product.name);
+
   }
 
   viewProductDetails(product: Product) {
     // Logique pour voir les détails du produit
-    console.log('Voir détails du produit:', product);
+
   }
 
   /**
@@ -718,7 +952,7 @@ export class EspaceVeterinaireComponent implements OnInit, OnDestroy {
   }
 
   scrollToPricing(): void {
-    const pricingSection = document.getElementById('pricing');
+    const pricingSection = document.getElementById('ctaCard');
     if (pricingSection) {
       pricingSection.scrollIntoView({
         behavior: 'smooth',

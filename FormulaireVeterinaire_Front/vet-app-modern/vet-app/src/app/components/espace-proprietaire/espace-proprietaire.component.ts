@@ -1,15 +1,29 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CartService } from '../../services/cart.service';
 import { ProductService } from '../../services/product.service';
 import { Product } from '../../models/product.model';
+import { environment } from '../../../environments/environment';
+import { SafePipe } from '../../pipes/safe.pipe';
+
+interface BlogPost {
+  id: number;
+  title: string;
+  description: string;
+  type: string;
+  pet?: 'CAT' | 'DOG';
+  pdfFilename: string;
+  pdfRelativePath: string;
+  fileSize: number;
+  createdAt: string;
+}
 
 @Component({
   selector: 'app-espace-proprietaire',
   standalone: true,
-  imports: [CommonModule, RouterModule, HttpClientModule],
+  imports: [CommonModule, RouterModule, HttpClientModule, SafePipe],
   templateUrl: './espace-proprietaire.component.html',
   styleUrls: ['./espace-proprietaire.component.scss']
 })
@@ -31,17 +45,35 @@ export class EspaceProprietaireComponent implements OnInit {
 
   selectedCategory: string | null = null;
   selectedSousCategory: string | null = null;
-  menuOpen = false;
+  selectedSubSubCategory: string | null = null;
+
   currentPage = 1;
-  itemsPerPage = 20;
+  itemsPerPage = 15;
   Math = Math; // Make Math available in template
   highlightedProductId: number | null = null;
+  highlightedSection: string | null = null;
+
+  // Blog pagination
+  blogCurrentPage = 1;
+  blogItemsPerPage = 2;
+  blogPosts: BlogPost[] = [];
+  isLoadingBlogs = false;
+  blogError = '';
+  
+  // PDF Modal
+  showPdfModal = false;
+  currentPdfUrl = '';
+  currentPdfTitle = '';
+  currentPdfPet: 'CAT' | 'DOG' | null = null;
+  isPdfLoading = false;
+  pdfBlobUrl: any = null;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private cartService: CartService,
-    private productService: ProductService
+    private productService: ProductService,
+    private http: HttpClient
   ) { }
 
   ngOnInit() {
@@ -52,23 +84,59 @@ export class EspaceProprietaireComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       if (params['animal']) {
         this.selectedCategory = this.capitalizeFirst(params['animal']);
+        
+        // If animal is selected but no type is specified, default to 'Aliment'
+        if (!params['type']) {
+          this.selectedSousCategory = 'Aliment';
+          // Update URL with default type (this will trigger subscription again)
+          this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: { animal: params['animal'], type: 'aliment' },
+            queryParamsHandling: 'merge'
+          });
+          // Don't load blogs here - wait for the URL update to trigger subscription
+        } else {
+          this.selectedSousCategory = this.mapProductType(params['type']);
+          // Only load blogs when type parameter exists (after URL is properly set)
+          this.loadBlogPosts(params['animal']);
+        }
       } else {
         this.selectedCategory = null;
-      }
-
-      if (params['type']) {
-        this.selectedSousCategory = this.mapProductType(params['type']);
-      } else {
         this.selectedSousCategory = null;
+        
+        // Load all proprietaire blogs when no animal is selected
+        this.loadBlogPosts();
       }
 
       // Check for highlighted product
       if (params['highlight']) {
         this.highlightedProductId = +params['highlight'];
+        // Scroll to top first
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         // Remove highlight after animation completes
         setTimeout(() => {
           this.highlightedProductId = null;
         }, 3000);
+      }
+
+      // Check for highlighted section
+      if (params['highlightSection']) {
+        this.highlightedSection = params['highlightSection'];
+        // Scroll to top first
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        // Use requestAnimationFrame to ensure DOM is updated, then wait for render
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            const element = document.getElementById(params['highlightSection']);
+            if (element) {
+              element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+          }, 500);
+        });
+        // Remove highlight after 5 seconds
+        setTimeout(() => {
+          this.highlightedSection = null;
+        }, 3500);
       }
 
       // Reset to first page when filters change
@@ -103,7 +171,7 @@ export class EspaceProprietaireComponent implements OnInit {
   private handleNavbarScroll(): void {
     const header = document.querySelector('header');
     const footer = document.querySelector('footer');
-    
+
     if (!header || !footer) return;
 
     const footerRect = footer.getBoundingClientRect();
@@ -116,7 +184,7 @@ export class EspaceProprietaireComponent implements OnInit {
       const overlap = windowHeight - footerRect.top;
       const maxPush = footerRect.height;
       const pushAmount = Math.min(overlap, maxPush);
-      
+
       // Apply transform to push navbar up
       if (pushAmount > 0) {
         header.style.transform = `translateY(-${pushAmount}px)`;
@@ -137,8 +205,10 @@ export class EspaceProprietaireComponent implements OnInit {
 
     this.productService.getAllProducts().subscribe({
       next: (products) => {
+        console.log('Products loaded:', products.length, products);
         this.products = products;
         this.isLoading = false;
+        console.log('Filtered products:', this.getFilteredProducts().length);
       },
       error: (error) => {
         console.error('Error loading products:', error);
@@ -161,12 +231,10 @@ export class EspaceProprietaireComponent implements OnInit {
     return typeMap[type] || type;
   }
 
-  toggleMenu() {
-    this.menuOpen = !this.menuOpen;
-  }
+
 
   navigateTo(route: string) {
-    this.menuOpen = false;
+
     if (route === 'ou-trouver-nos-produits') {
       this.router.navigate(['/ou-trouver-nos-produits']);
     } else {
@@ -175,48 +243,70 @@ export class EspaceProprietaireComponent implements OnInit {
   }
 
   selectCategory(cat: string) {
-    this.selectedCategory = this.selectedCategory === cat ? null : cat;
-    this.selectedSousCategory = null;
+    // If clicking the same category, keep it selected (don't toggle off)
+    // If clicking a different category, switch to it
+    if (this.selectedCategory !== cat) {
+      this.selectedCategory = cat;
+      this.selectedSousCategory = null;
+      this.selectedSubSubCategory = null;
+    }
   }
 
   selectSousCategory(sub: string) {
-    this.selectedSousCategory = sub;
-    this.menuOpen = false;
+    this.selectedSousCategory = this.selectedSousCategory === sub ? null : sub;
+    this.selectedSubSubCategory = null;
+  }
+
+  selectSubSubCategory(subSub: string) {
+    this.selectedSubSubCategory = this.selectedSubSubCategory === subSub ? null : subSub;
+  }
+
+  shouldShowSubSubCategoryFilter(): boolean {
+    return this.selectedCategory !== null && this.selectedSousCategory === 'Aliment';
   }
 
   getFilteredProducts(): Product[] {
-    // If no filters are applied, return all products
-    if (!this.selectedCategory && !this.selectedSousCategory) {
-      return this.products;
+    // When on /espace-proprietaire without any filters, show ALL products
+    if (!this.selectedCategory && !this.selectedSousCategory && !this.selectedSubSubCategory) {
+      return this.products; // Return ALL products from API
     }
 
+    // Apply filters only when category/subcategory is selected
     return this.products.filter(product => {
-      // Normalize strings for comparison (lowercase, remove accents, replace spaces/underscores)
       const normalizeString = (str: string) => {
         return str.toLowerCase()
           .normalize('NFD')
           .replace(/[\u0300-\u036f]/g, '')
-          .replace(/[\s_-]/g, ''); // Remove spaces, underscores, and hyphens
+          .replace(/[\s_-]/g, '');
       };
 
       const productCategory = normalizeString(product.category);
       const productSubCategory = normalizeString(product.subCategory);
+      const productSubSubCategory = product.subSubCategory ? normalizeString(product.subSubCategory) : null;
       const filterCategory = this.selectedCategory ? normalizeString(this.selectedCategory) : null;
       const filterSubCategory = this.selectedSousCategory ? normalizeString(this.selectedSousCategory) : null;
+      const filterSubSubCategory = this.selectedSubSubCategory ? normalizeString(this.selectedSubSubCategory) : null;
 
-      // If only product type is selected (no specific animal), match any animal with that type
-      if (!filterCategory && filterSubCategory) {
+      if (!filterCategory && filterSubCategory && !filterSubSubCategory) {
         return productSubCategory === filterSubCategory;
       }
 
-      // If only animal is selected (no specific type), match that animal with any type
-      if (filterCategory && !filterSubCategory) {
+      if (filterCategory && !filterSubCategory && !filterSubSubCategory) {
         return productCategory === filterCategory;
       }
 
-      // If both are selected, match both
-      if (filterCategory && filterSubCategory) {
+      if (filterCategory && filterSubCategory && !filterSubSubCategory) {
         return productCategory === filterCategory && productSubCategory === filterSubCategory;
+      }
+
+      if (filterCategory && filterSubCategory && filterSubSubCategory) {
+        return productCategory === filterCategory && 
+               productSubCategory === filterSubCategory && 
+               productSubSubCategory === filterSubSubCategory;
+      }
+
+      if (!filterCategory && !filterSubCategory && filterSubSubCategory) {
+        return productSubSubCategory === filterSubSubCategory;
       }
 
       return true;
@@ -297,6 +387,241 @@ export class EspaceProprietaireComponent implements OnInit {
     if (!img.src.includes('data:image')) {
       // Use a simple SVG placeholder instead of trying to load another image
       img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2YzZjRmNiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM5Y2EzYWYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5JbWFnZSBub24gZGlzcG9uaWJsZTwvdGV4dD48L3N2Zz4=';
+    }
+  }
+
+  /**
+   * Scroll to a specific section on the page
+   */
+  scrollToSection(sectionId: string): void {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const yOffset = -80; // Offset for fixed header
+      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  }
+
+  /**
+   * Scroll to products section
+   */
+  scrollToProducts(): void {
+    this.scrollToSection('products-section');
+  }
+
+  /**
+   * Load blog posts from API
+   */
+  loadBlogPosts(animal?: string): void {
+    this.isLoadingBlogs = true;
+    this.blogError = '';
+
+    // Determine the API endpoint based on animal selection
+    let endpoint: string;
+    if (animal) {
+      // Convert 'chat' to 'CAT' and 'chien' to 'DOG'
+      const pet = animal.toLowerCase() === 'chat' ? 'CAT' : 'DOG';
+      endpoint = `${environment.apiUrl}/blogs/pet/${pet}`;
+    } else {
+      // Load all proprietaire blogs when no animal is selected
+      endpoint = `${environment.apiUrl}/blogs/type/PROPRIETAIRE`;
+    }
+
+    this.http.get<BlogPost[]>(endpoint, {
+      withCredentials: true
+    }).subscribe({
+      next: (posts) => {
+        this.blogPosts = posts;
+        this.isLoadingBlogs = false;
+      },
+      error: (error) => {
+        console.error('Error loading blog posts:', error);
+        this.blogError = 'Erreur lors du chargement des articles';
+        this.isLoadingBlogs = false;
+      }
+    });
+  }
+
+  /**
+   * Format date for display
+   */
+  formatBlogDate(dateString: string): string {
+    const date = new Date(dateString);
+    const months = [
+      'janvier', 'février', 'mars', 'avril', 'mai', 'juin',
+      'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'
+    ];
+    
+    const day = date.getDate();
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
+    
+    return `${day} ${month} ${year}`;
+  }
+
+  /**
+   * Open PDF in modal
+   */
+  openPdfModal(post: BlogPost): void {
+      console.log('=== OPENING PDF MODAL ===');
+      console.log('Post data:', post);
+      console.log('Post pet:', post.pet);
+
+      if (!post.pdfRelativePath) {
+        console.error('ERROR: No PDF path available');
+        return;
+      }
+
+      console.log('PDF Relative Path:', post.pdfRelativePath);
+
+      // Extract year, month, and filename from pdfRelativePath
+      const pathParts = post.pdfRelativePath.replace('/uploads/pdfs', '').split('/').filter(p => p);
+
+      console.log('Path parts after split:', pathParts);
+
+      if (pathParts.length >= 3) {
+        const year = pathParts[0];
+        const month = pathParts[1];
+        const filename = pathParts[2];
+
+        const pdfUrl = `${environment.apiUrl}/blogs/pdf/${year}/${month}/${filename}`;
+        console.log('✓ PDF URL constructed:', pdfUrl);
+
+        // Show modal immediately
+        this.currentPdfTitle = post.title;
+        this.currentPdfPet = post.pet || null;
+        console.log('✓ Current PDF Pet set to:', this.currentPdfPet);
+        this.showPdfModal = true;
+        this.isPdfLoading = true;
+        document.body.style.overflow = 'hidden';
+
+        console.log('✓ Modal opened, fetching PDF...');
+
+        // Fetch PDF as blob with credentials
+        this.http.get(pdfUrl, {
+          responseType: 'blob',
+          withCredentials: true
+        }).subscribe({
+          next: (blob: Blob) => {
+            console.log('✓ PDF blob received!');
+            console.log('Blob size:', blob.size, 'bytes');
+            console.log('Blob type:', blob.type);
+
+            // Revoke old blob URL if exists
+            if (this.pdfBlobUrl) {
+              URL.revokeObjectURL(this.pdfBlobUrl);
+            }
+
+            // Create blob with correct PDF type
+            const pdfBlob = new Blob([blob], { type: 'application/pdf' });
+            this.pdfBlobUrl = URL.createObjectURL(pdfBlob);
+            this.currentPdfUrl = this.pdfBlobUrl;
+
+            console.log('✓ Blob URL created:', this.pdfBlobUrl);
+
+            // Hide loading after a short delay
+            setTimeout(() => {
+              this.isPdfLoading = false;
+              console.log('✓ PDF ready to display');
+            }, 300);
+          },
+          error: (error) => {
+            console.error('✗ Error fetching PDF:', error);
+            console.error('Error status:', error.status);
+            console.error('Error statusText:', error.statusText);
+            console.error('Error url:', error.url);
+            console.error('Error message:', error.message);
+
+            this.isPdfLoading = false;
+            
+            // If status is 200 or 0 but still error (CORS issue), try direct URL fallback
+            if (error.status === 200 || error.status === 0) {
+              console.log('Status 200 but error - trying fallback: direct URL in iframe');
+              this.currentPdfUrl = pdfUrl;
+              setTimeout(() => {
+                this.isPdfLoading = false;
+              }, 500);
+            } else {
+              // Real error, clear URL and show message
+              this.currentPdfUrl = '';
+              alert('Erreur lors du chargement du PDF (Status: ' + error.status + ')');
+            }
+          }
+        });
+      } else {
+        console.error('ERROR: Invalid PDF path format:', post.pdfRelativePath);
+        console.error('Expected at least 3 parts, got:', pathParts.length);
+      }
+    }
+
+
+
+  /**
+   * Close PDF modal
+   */
+  closePdfModal(): void {
+    this.showPdfModal = false;
+    this.isPdfLoading = false;
+    this.currentPdfPet = null;
+    
+    // Revoke blob URL to free memory
+    if (this.pdfBlobUrl) {
+      URL.revokeObjectURL(this.pdfBlobUrl);
+      this.pdfBlobUrl = null;
+    }
+    
+    this.currentPdfUrl = '';
+    this.currentPdfTitle = '';
+    
+    // Restore body scroll
+    document.body.style.overflow = 'auto';
+  }
+
+  /**
+   * Handle PDF iframe load event
+   */
+  onPdfLoad(): void {
+    console.log('PDF iframe loaded successfully');
+  }
+
+  /**
+   * Handle PDF iframe error event
+   */
+  onPdfError(): void {
+    console.error('PDF iframe failed to load');
+  }
+
+  /**
+   * Get paginated blog posts
+   */
+  getPaginatedBlogPosts(): BlogPost[] {
+    const startIndex = (this.blogCurrentPage - 1) * this.blogItemsPerPage;
+    const endIndex = startIndex + this.blogItemsPerPage;
+    return this.blogPosts.slice(startIndex, endIndex);
+  }
+
+  /**
+   * Get total blog pages
+   */
+  getBlogTotalPages(): number {
+    return Math.ceil(this.blogPosts.length / this.blogItemsPerPage);
+  }
+
+  /**
+   * Navigate to next blog page
+   */
+  nextBlogPage(): void {
+    if (this.blogCurrentPage < this.getBlogTotalPages()) {
+      this.blogCurrentPage++;
+    }
+  }
+
+  /**
+   * Navigate to previous blog page
+   */
+  previousBlogPage(): void {
+    if (this.blogCurrentPage > 1) {
+      this.blogCurrentPage--;
     }
   }
 }

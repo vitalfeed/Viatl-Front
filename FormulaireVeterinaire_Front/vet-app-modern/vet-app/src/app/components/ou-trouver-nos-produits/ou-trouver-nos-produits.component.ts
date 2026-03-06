@@ -5,6 +5,8 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { environment } from '../../../environments/environment';
 import * as L from 'leaflet';
+import { forkJoin, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 @Pipe({
   name: 'sanitizeUrl',
@@ -26,8 +28,9 @@ interface VeterinaryLocation {
   phone: string;
   latitude: number;
   longitude: number;
-  type: string;
+  type: string; // 'CABINET' or 'BOUTIQUE'
   featured: boolean;
+  matricule?: string; // Optional since Cabinets might not have it or it's named differently
 }
 
 @Component({
@@ -75,7 +78,7 @@ export class OuTrouverNosProduitsComponent implements OnInit, AfterViewInit {
    * Initialize Leaflet map
    */
   initMap(): void {
-    // Fix for default marker icon issue with Leaflet + Webpack
+    // Standard Leaflet icon setup (will be overridden by custom icons per marker)
     const iconRetinaUrl = 'assets/marker-icon-2x.png';
     const iconUrl = 'assets/marker-icon.png';
     const shadowUrl = 'assets/marker-shadow.png';
@@ -119,18 +122,60 @@ export class OuTrouverNosProduitsComponent implements OnInit, AfterViewInit {
 
     if (this.filteredLocations.length === 0) return;
 
+    // Define icons
+    // Blue icon for Cabinets
+    const cabinetIcon = L.icon({
+      iconUrl: 'assets/marker-icon.png',
+      iconRetinaUrl: 'assets/marker-icon-2x.png',
+      shadowUrl: 'assets/marker-shadow.png',
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41]
+    });
+
+    // Orange icon for Boutiques - Using SVG DivIcon for distinct look without external assets
+    const boutiqueIcon = L.divIcon({
+      className: 'custom-div-icon',
+      html: `<div style="background-color: #ea580c; width: 25px; height: 25px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;">
+               <span style="color: white; font-size: 14px;">🛍️</span>
+             </div>`,
+      iconSize: [30, 42],
+      iconAnchor: [15, 42],
+      popupAnchor: [1, -34]
+    });
+
+
     // Add markers for each location
     const bounds: L.LatLngBoundsExpression = [];
 
     this.filteredLocations.forEach(location => {
-      const marker = L.marker([location.latitude, location.longitude])
+      // Determine icon based on type
+      let icon: any = cabinetIcon;
+      if (location.type === 'BOUTIQUE' || location.type === 'Boutique') {
+        icon = boutiqueIcon;
+      }
+
+      const marker = L.marker([location.latitude, location.longitude], { icon: icon })
         .addTo(this.map!)
         .bindPopup(`
           <div style="min-width: 200px;">
-            <h3 style="margin: 0 0 8px 0; font-size: 14px; font-weight: bold;">${location.name}</h3>
-            <p style="margin: 4px 0; font-size: 12px;">📍 ${location.address}, ${location.city}</p>
-            <p style="margin: 4px 0; font-size: 12px;">📞 ${location.phone}</p>
-            ${location.featured ? '<span style="background: #10b981; color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px;">⭐ Cabinet Principal</span>' : ''}
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+              ${(location.type === 'BOUTIQUE' || location.type === 'Boutique') ? '<span style="font-size: 16px;">🛍️</span>' : '<span style="font-size: 16px;">🏥</span>'}
+              <h3 style="margin: 0; font-size: 14px; font-weight: bold;">${location.name}</h3>
+            </div>
+            
+            <p style="margin: 4px 0; font-size: 12px; color: #4b5563;">
+              <span style="margin-right: 4px;">📍</span> ${location.address}, ${location.city}
+            </p>
+         
+            
+            <div style="margin-top: 8px;">
+               ${location.featured ? '<span style="background: #10b981; color: white; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-weight: bold;">⭐ Principal</span>' : ''}
+               ${(location.type === 'BOUTIQUE' || location.type === 'Boutique') ?
+            '<span style="background: #ea580c; color: white; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-weight: bold; margin-left: 4px;">Boutique</span>' :
+            '<span style="background: #2563eb; color: white; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-weight: bold; margin-left: 4px;">Cabinet</span>'}
+            </div>
           </div>
         `);
 
@@ -145,35 +190,76 @@ export class OuTrouverNosProduitsComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * Load veterinary locations from API
+   * Load veterinary locations from API (Both Cabinets and Boutiques)
    */
   loadLocations(): void {
     this.loading = true;
     this.error = '';
 
-    this.http.get<VeterinaryLocation[]>(`${environment.apiUrl}/cabinets/all`)
-      .subscribe({
-        next: (response) => {
-          this.locations = response;
-          this.filteredLocations = this.locations;
-          this.currentPage = 1;
-          this.updatePagination();
-          this.loading = false;
+    // Wrap each request in catchError to allow partial success
+    const cabinets$ = this.http.get<any[]>(`${environment.apiUrl}/cabinets/all`).pipe(
+      catchError(err => {
+        console.error('Error loading cabinets:', err);
+        return of([]); // Return empty array on error
+      })
+    );
 
-          // Update map markers after loading
-          if (this.map) {
-            this.updateMapMarkers();
-          }
-        },
-        error: (error) => {
-          console.error('Error loading locations:', error);
-          this.error = 'Erreur lors du chargement des cabinets';
-          this.loading = false;
+    const boutiques$ = this.http.get<any[]>(`${environment.apiUrl}/boutiques/all`).pipe(
+      catchError(err => {
+        console.error('Error loading boutiques:', err);
+        // Ensure we don't break the whole page if boutiques fail (e.g. 401)
+        return of([]);
+      })
+    );
+
+    forkJoin([cabinets$, boutiques$]).subscribe({
+      next: ([cabinets, boutiques]) => {
+        // Process Cabinets
+        const processedCabinets = cabinets.map(c => ({
+          ...c,
+          // Ensure address fields are present
+          address: c.address || '',
+          city: c.city || '',
+          phone: c.phone || '',
+          type: 'CABINET', // Ensure type is set
+          featured: c.featured || false
+        }));
+
+        // Process Boutiques
+        const processedBoutiques = boutiques.map(b => ({
+          ...b,
+          // Ensure address fields are present
+          address: b.address || '',
+          city: b.city || '',
+          phone: b.phone || '',
+          type: 'BOUTIQUE', // Ensure type is set
+          featured: b.featured !== undefined ? b.featured : (b.isFeatured || false)
+        }));
+
+        // Merge and shuffle slightly or sort to mix
+        this.locations = [...processedCabinets, ...processedBoutiques];
+        this.filteredLocations = this.locations;
+
+        this.currentPage = 1;
+        this.updatePagination();
+        this.loading = false;
+
+        if (this.locations.length === 0) {
+          this.error = 'Aucun point de vente trouvé ou erreur de connexion.';
         }
-      });
+
+        // Update map markers after loading
+        if (this.map) {
+          this.updateMapMarkers();
+        }
+      },
+      error: (error) => {
+        console.error('Error loading locations:', error);
+        this.error = 'Erreur lors du chargement des points de vente';
+        this.loading = false;
+      }
+    });
   }
-
-
 
   /**
    * Filter locations by type
@@ -181,16 +267,18 @@ export class OuTrouverNosProduitsComponent implements OnInit, AfterViewInit {
   filterLocations(filter: string): void {
     this.selectedFilter = filter;
 
-    if (filter === 'all') {
-      this.filteredLocations = this.locations;
-    } else if (filter === 'featured') {
-      this.filteredLocations = this.locations.filter(loc => loc.featured);
-    } else if (filter === 'CABINET') {
-      this.filteredLocations = this.locations.filter(loc => loc.type === 'CABINET');
-    } else if (filter === 'CABINET') {
-      this.filteredLocations = this.locations.filter(loc => loc.type === 'CABINET');
-    } else {
-      this.filteredLocations = this.locations.filter(loc => loc.type.toLowerCase() === filter.toLowerCase());
+    switch (filter) {
+      case 'all':
+        this.filteredLocations = this.locations;
+        break;
+      case 'CABINET':
+        this.filteredLocations = this.locations.filter(loc => loc.type === 'CABINET');
+        break;
+      case 'BOUTIQUE':
+        this.filteredLocations = this.locations.filter(loc => loc.type === 'BOUTIQUE' || loc.type === 'Boutique');
+        break;
+      default:
+        this.filteredLocations = this.locations;
     }
 
     // Update pagination and map markers when filter changes
